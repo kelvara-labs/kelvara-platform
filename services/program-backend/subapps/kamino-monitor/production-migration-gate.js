@@ -1,18 +1,24 @@
 import {readFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
 
-export const MAINNET_PROTECTION_ROUTES=Object.freeze(new Set([
+export const MAINNET_PROTECTION_BOOTSTRAP_ROUTES=Object.freeze(new Set([
   '/api/protection/nonce-setup/prepare',
   '/api/protection/nonce-setup/submit',
   '/api/protection/prepare',
   '/api/protection/arm',
+  '/api/evacuation/prepare',
+]));
+export const MAINNET_PROTECTION_EXECUTION_ROUTES=Object.freeze(new Set([
   '/api/protection/fast-close',
   '/api/protection/revoke/prepare',
   '/api/protection/revoke',
   '/api/protection/revoke/finalize',
   '/api/protection/manual-evacuation/finalize',
-  '/api/evacuation/prepare',
   '/api/evacuation/submit',
+]));
+export const MAINNET_PROTECTION_ROUTES=Object.freeze(new Set([
+  ...MAINNET_PROTECTION_BOOTSTRAP_ROUTES,
+  ...MAINNET_PROTECTION_EXECUTION_ROUTES,
 ]));
 const CHECKS=Object.freeze([
   'programRuntimeMigrated','protectionKeyCompatible','permitVaultIdentityVerified','controllerIdentityVerified',
@@ -33,4 +39,4 @@ export async function resolveMainnetProtectionGate(env=process.env,baseDir='.'){
   return Object.freeze({enabled:true,releaseSha,verifiedAt:gate.verifiedAt,checks:Object.freeze({...gate.checks})});
 }
 
-export function mainnetProtectionBlocked(gate,method,pathname){return method==='POST'&&MAINNET_PROTECTION_ROUTES.has(pathname)&&gate?.enabled!==true}
+export function mainnetProtectionBlocked(gate,method,pathname){return method==='POST'&&MAINNET_PROTECTION_EXECUTION_ROUTES.has(pathname)&&gate?.enabled!==true}
