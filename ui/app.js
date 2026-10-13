@@ -15,8 +15,7 @@ const tokenLabelFor=typeof tokenLabelForImpl==="function"?tokenLabelForImpl:symb
 const networkIconFor=typeof networkIconForImpl==="function"?networkIconForImpl:()=>"/assets/networks/solana.svg";
 const networkLabelFor=typeof networkLabelForImpl==="function"?networkLabelForImpl:network=>network==="devnet"?"Devnet":"Mainnet";
 const customIconFor=typeof customIconForImpl==="function"?customIconForImpl:()=>"/assets/custom/fallback.svg";
-const API_BASE=location.hostname==="app.kelvara.xyz"?"https://api.kelvara.xyz":""; // Local hosts use the same-origin reverse proxy.
-function apiUrl(path){return `${API_BASE}${path}`}
+function apiUrl(path){return path}
 const $=selector=>document.querySelector(selector);let walletAddress=null,walletSource=null,activeProvider=null,evidence=null,portfolioState=null,selectedPortfolioTarget=null,portfolioAvailable=false,evacuationDraft=null,protectionToken=null,protectionStatus=null,protectionStatuses=new Map(),protectionLoadEpoch=0,monitorTimer=null,countdownTimer=null,pendingTimer=null,seconds=60,inspectionEpoch=0,intentionalDisconnect=false,disconnectLifecycle=null;const walletRequestControllers=new Set();
 function trackedWalletFetch(input,options={},track=true){if(intentionalDisconnect)throw new Error("intentional_disconnect");const controller=new AbortController();if(track)walletRequestControllers.add(controller);const merged={...options,signal:controller.signal};return fetch(input,merged).finally(()=>walletRequestControllers.delete(controller))}
 function abortAuthenticatedRequests(){for(const controller of walletRequestControllers)controller.abort();walletRequestControllers.clear()}
