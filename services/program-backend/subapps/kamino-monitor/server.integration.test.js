@@ -44,6 +44,8 @@ test('demo evacuation prepare submit finalize dispatch', async t => {
   assert.equal((await json(await request('/api/demo/evacuation/submit?network=devnet',{method:'POST',headers,body:JSON.stringify({targetId,signedTransaction:'x',lastValidBlockHeight:1})}))).status,200);
   assert.equal((await json(await request('/api/demo/evacuation/finalize?network=devnet',{method:'POST',headers,body:JSON.stringify({targetId,signature:'sig'})}))).status,200);
   assert.deepEqual(calls.map(x=>x[0]),['submit','finalize']); assert.equal(calls[0][1].wallet,wallet);
+  const wrongTarget=JSON.stringify({targetId:'solana:devnet:kelvara-demo:position:wrong'});
+  assert.deepEqual(await json(await request('/api/protection/evacuation/prepare?network=devnet',{method:'POST',headers,body:wrongTarget})),{status:403,body:{error:'demo_scope_mismatch'}});
 });
 
 test('all legacy protection routes fail closed in demo before handlers', async t => {
