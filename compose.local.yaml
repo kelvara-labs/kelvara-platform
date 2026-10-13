@@ -1,0 +1,6 @@
+services:
+  program-backend:
+    ports: !override
+      - "127.0.0.1:${PROGRAM_BACKEND_LOCAL_PORT:-18437}:8080"
+    environment:
+      ALLOWED_ORIGINS: http://127.0.0.1:${PROGRAM_BACKEND_LOCAL_PORT:-18437},http://localhost:${PROGRAM_BACKEND_LOCAL_PORT:-18437}

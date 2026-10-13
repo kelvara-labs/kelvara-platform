@@ -1,0 +1,37 @@
+services:
+  program-backend:
+    ports: !override []
+    # Caddy reaches port 8080 over kelvara-backend; no backend port is host-published.
+    environment:
+      ALLOWED_ORIGINS: https://${KELVARA_APP_DOMAIN:?set public application hostname}
+  caddy:
+    image: caddy:2.10.2-alpine
+    environment:
+      KELVARA_APP_DOMAIN: ${KELVARA_APP_DOMAIN:?set public application hostname}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./deploy/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      program-backend:
+        condition: service_healthy
+    networks:
+      - kelvara-backend
+      - kelvara-egress
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+volumes:
+  caddy-data:
+  caddy-config:

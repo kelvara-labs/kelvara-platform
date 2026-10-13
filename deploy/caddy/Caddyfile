@@ -1,0 +1,22 @@
+{
+	email {$CADDY_ACME_EMAIL:off}
+}
+
+{$KELVARA_APP_DOMAIN} {
+	encode zstd gzip
+
+	@live path /api/stream /api/events/*
+	reverse_proxy @live program-backend:8080 {
+		flush_interval -1
+		stream_timeout 24h
+		stream_close_delay 5m
+	}
+
+	reverse_proxy program-backend:8080
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+	}
+}

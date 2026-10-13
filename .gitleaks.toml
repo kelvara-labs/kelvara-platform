@@ -1,8 +1,0 @@
-[extend]
-useDefault = true
-
-[[allowlists]]
-description = "Public Solana fixture account address; not a credential"
-paths = ['''^services/program-backend/subapps/protocol-fixture-lab/state\.js$''']
-regexTarget = "match"
-regexes = ['''FIXTURE_TOKEN_ACCOUNT\s*=\s*"FrnmPoRJ33vJhDd68jCQt7nMiV6gRsrjvTHoM5JtzNzx"''']

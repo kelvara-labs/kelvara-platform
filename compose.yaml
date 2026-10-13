@@ -6,42 +6,45 @@ services:
       dockerfile: services/program-backend/Dockerfile
     env_file: .env
     environment:
+      KELVARA_RELEASE_SHA: ${KELVARA_RELEASE_SHA:?set immutable production Git commit}
+      MAINNET_PROTECTION_MODE: ${MAINNET_PROTECTION_MODE:?set disabled until the migration gate passes}
+      MAINNET_PROTECTION_GATE_FILE: ${MAINNET_PROTECTION_GATE_FILE:-/run/kelvara/mainnet-protection-gate.json}
       HOST: 0.0.0.0
       PORT: 8080
       KELVARA_RUNTIME_DIR: /data/kamino-monitor
       KELVARA_UI_ROOT: /app/ui
       KELVARA_CONTROL_PLANE_URL: http://control-center:7651
-      KELVARA_CONTROL_PLANE_TOKEN: ${CONTROL_PLANE_READ_TOKEN}
+      KELVARA_CONTROL_PLANE_TOKEN: ${CONTROL_PLANE_READ_TOKEN:?required}
       KELVARA_OBSERVATION_HUB_URL: http://observation-hub:7610
-      KELVARA_OBSERVATION_HUB_TOKEN: ${EVALUATION_RECEIPTS_TOKEN}
-      KELVARA_GOVERNANCE_TOKEN: ${GOVERNANCE_CONTROL_READ_TOKEN}
-      KELVARA_GOVERNANCE_ACTION_TOKEN: ${GOVERNANCE_ACTION_READ_TOKEN}
-      KELVARA_GOVERNANCE_DETECTION_TOKEN: ${GOVERNANCE_DETECTION_READ_TOKEN}
-      SOLANA_RPC_URL: ${SOLANA_RPC_URL}
-      KAMINO_API_URL: ${KAMINO_API_URL}
+      KELVARA_OBSERVATION_HUB_TOKEN: ${EVALUATION_RECEIPTS_TOKEN:?required}
+      KELVARA_GOVERNANCE_TOKEN: ${GOVERNANCE_CONTROL_READ_TOKEN:?required}
+      KELVARA_GOVERNANCE_ACTION_TOKEN: ${GOVERNANCE_ACTION_READ_TOKEN:?required}
+      KELVARA_GOVERNANCE_DETECTION_TOKEN: ${GOVERNANCE_DETECTION_READ_TOKEN:?required}
+      SOLANA_RPC_URL: ${SOLANA_RPC_URL:?required}
+      KAMINO_API_URL: ${KAMINO_API_URL:?required}
       JUPITER_API_KEY: ${JUPITER_API_KEY:-}
       GOVERNANCE_LAB_RPC_URL: https://api.devnet.solana.com
       GOVERNANCE_LAB_MINT: 8WTE49UZEtMjrCuGvpbBBqSLNM75ZU4WyTdaptz9H4Rb
       GOVERNANCE_LAB_AUTHORITY: AtDPByS8KB94HqC6mDm9ta5rdQgZDB62JgXSSmmceVXF
       DEVNET_DEMO_WALLET: DpbwVS5RYtUon7DVPDHXDSkDKVhxermbYytRP9fGhxXv
-      DEVNET_RPC_URL: ${DEVNET_RPC_URL}
-      DEVNET_GENESIS_HASH: ${DEVNET_GENESIS_HASH}
-      DEVNET_SCENARIO_PROGRAM_ID: ${DEVNET_SCENARIO_PROGRAM_ID}
-      DEVNET_SCENARIO_SESSION: ${DEVNET_SCENARIO_SESSION}
-      DEVNET_SCENARIO_SESSION_ID: ${DEVNET_SCENARIO_SESSION_ID}
-      DEMO_POSITION_TARGET_ID: ${DEMO_POSITION_TARGET_ID}
-      DEMO_POSITION_POLICY_REVISION: ${DEMO_POSITION_POLICY_REVISION}
+      DEVNET_RPC_URL: ${DEVNET_RPC_URL:?required}
+      DEVNET_GENESIS_HASH: ${DEVNET_GENESIS_HASH:?required}
+      DEVNET_SCENARIO_PROGRAM_ID: ${DEVNET_SCENARIO_PROGRAM_ID:?required}
+      DEVNET_SCENARIO_SESSION: ${DEVNET_SCENARIO_SESSION:?required}
+      DEVNET_SCENARIO_SESSION_ID: ${DEVNET_SCENARIO_SESSION_ID:?required}
+      DEMO_POSITION_TARGET_ID: ${DEMO_POSITION_TARGET_ID:?required}
+      DEMO_POSITION_POLICY_REVISION: ${DEMO_POSITION_POLICY_REVISION:?required}
       DEMO_POSITION_RULE_VERSION: ${DEMO_POSITION_RULE_VERSION:-1}
-      DEMO_POSITION_BINDING_ID: ${DEMO_POSITION_BINDING_ID}
-      DEVNET_FUN_USD_MINT: ${DEVNET_FUN_USD_MINT}
+      DEMO_POSITION_BINDING_ID: ${DEMO_POSITION_BINDING_ID:?required}
+      DEVNET_FUN_USD_MINT: ${DEVNET_FUN_USD_MINT:?required}
       DEVNET_FUN_USD_AUTHORITY_PATH: /run/secrets/devnet-demo-controller.json
-      DEVNET_FUN_USD_AUTHORITY_PUBKEY: ${DEVNET_DEMO_AUTHORITY_PUBLIC_KEY}
-      DEVNET_DEMO_AUTHORITY_PUBLIC_KEY: ${DEVNET_DEMO_AUTHORITY_PUBLIC_KEY}
-      DEVNET_SCENARIO_CONTROLLER_PUBKEY: ${DEVNET_DEMO_AUTHORITY_PUBLIC_KEY}
+      DEVNET_FUN_USD_AUTHORITY_PUBKEY: ${DEVNET_DEMO_AUTHORITY_PUBLIC_KEY:?required}
+      DEVNET_DEMO_AUTHORITY_PUBLIC_KEY: ${DEVNET_DEMO_AUTHORITY_PUBLIC_KEY:?required}
+      DEVNET_SCENARIO_CONTROLLER_PUBKEY: ${DEVNET_DEMO_AUTHORITY_PUBLIC_KEY:?required}
       DEVNET_DEMO_AUTHORITY_KEY_FILE: /run/secrets/devnet-demo-controller.json
       DEVNET_SCENARIO_CONTROLLER_PATH: /run/secrets/devnet-demo-controller.json
       SCENARIO_OBSERVATION_HUB_URL: http://observation-hub:7610
-      SCENARIO_OBSERVATION_PRODUCER_TOKEN: ${SCENARIO_OBSERVATION_PRODUCER_TOKEN}
+      SCENARIO_OBSERVATION_PRODUCER_TOKEN: ${SCENARIO_OBSERVATION_PRODUCER_TOKEN:?required}
       GOVERNANCE_VISIBILITY_MAPPINGS_JSON: '[{"bindingId":"governance-lab-devnet-squads-v4","positionId":"solana:devnet:kelvara-governance-lab:position:Ed7aDLAYDq8Q91Gvq2nkHft16dShNaWiTs8hRbgfoiJp","targetId":"solana:devnet:kelvara-governance-lab:position:Ed7aDLAYDq8Q91Gvq2nkHft16dShNaWiTs8hRbgfoiJp","subjectAddress":"AtDPByS8KB94HqC6mDm9ta5rdQgZDB62JgXSSmmceVXF","provider":"squads","generation":"v4","programId":"SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf","multisigAddress":"CUR3VagHa3wBvYF4HYPnSyhDXTw8bPemCBsR3eF6u67Y","vaultIndex":0,"vaultAddress":"AtDPByS8KB94HqC6mDm9ta5rdQgZDB62JgXSSmmceVXF","baselineId":"visibility:governance-lab-devnet-squads-v4","baselineRevision":1}]'
       GOVERNANCE_SAFEGUARDS_BASELINES_JSON: '[{"positionId":"solana:mainnet-beta:kamino:kvault:B5pjfZAiKjyUEuqB2694NHrsjcaM67uuJaWqjzTVtzR6","network":"mainnet-beta","subjectAddress":"4GvE6QukisVdvrNDT9CUd8uatmiyUxkkxH2gWyjvyksG","multisigAddress":"4MAbUHwdwWfHYxqoTmZ7j75so6ExG4qPkNhDQi58dPPM","threshold":3,"members":["2RJJ1ZZpeQLm6HEQ1HtcrGJUzQa8hKQgjgDf7ANz9Rd5","5ggs2vd1csz74YMCzxesmcUEd3ycYFKAW6kfyttVYwBv","A1Vc4aTa9jvfT8Hpi5Ug4UkKvrKKxRHTyXP7QUFFB1cD","BMGYmN1hG8evD3pvy1Rk41bFUdGGVP5fYJbh2JHMonqK","CmJywvWynJAiADsgTkVWu5BJus4ru2SP1PnfBXvThrxZ","DFheUjWj6BL9CuF8gAYfF6TgrbrruTTCc3vE6Ajn1gyK","G8fVffcHt3n6DkjSdYj47xWe55QjFsL4P5zhQ9RXFuPa","HrKa158AuSt2QtDWnvr81qdgBZjJ7MJGkaQ8D7pZeYMj"]},{"positionId":"solana:mainnet-beta:kamino:kvault:BoZDRc1RDY9FzUZZ19WT4GbtTnnbXQ8AGSU5ByEw3ut5","network":"mainnet-beta","subjectAddress":"9ceRgz579BcfWogs3RE11FKNQaWW7Lmtnev3MXspxUjF","multisigAddress":"4WUP4FFwgWd6gsCd8hR2umCLQA2pFCEaMm21vbyDZubA","threshold":3,"members":["vieuhps4NgfmJUa6L7PQtPfWLtXDW9LaJF5krgAwGpp","7NcYNruSaSX8JfLGAevnFfwDnQztbeK6YDXUgah8QLmB","8JhioVHdS4bPAqiDoZNmdcPTEZiH8PS6s2gRCZPpeRCy","AcCjHBgZzLvKzgeimqr97EqhXjjZ29wvkqRwCGymZXXz","Eud2DmgkABguWGdoEEhba56GXjKvGTUGp1zbYF3UcKTM","Gq2m2Qc4hfwMZfBUcwcsgDaoKu4ARscW7e3gp4j7yPGi","HQvD32wyvsPDiixM1bWpTgoVNrsGdmxxLume1y9SUAge"]},{"positionId":"solana:devnet:kelvara-governance-lab:position:Ed7aDLAYDq8Q91Gvq2nkHft16dShNaWiTs8hRbgfoiJp","network":"devnet","subjectAddress":"AtDPByS8KB94HqC6mDm9ta5rdQgZDB62JgXSSmmceVXF","multisigAddress":"CUR3VagHa3wBvYF4HYPnSyhDXTw8bPemCBsR3eF6u67Y","threshold":2,"members":["2GoEDEtsSgvRpCnYB7QNmzuRJz7dTdzGkphgDGNNy5uH","DpbwVS5RYtUon7DVPDHXDSkDKVhxermbYytRP9fGhxXv","GGwyWv1goVjyTiH9tQ72uXrn2voF56eZESnM4rEwrY98"]}]'
       KELVARA_DB_PATH: /data/kelvara.sqlite
@@ -53,6 +56,7 @@ services:
     volumes:
       - program-runtime:/data
       - ./secrets/devnet-demo/controller-keypair.json:/run/secrets/devnet-demo-controller.json:ro
+      - ./production/approvals:/run/kelvara:ro
     networks: [kelvara-backend, kelvara-egress]
     restart: unless-stopped
     read_only: true
@@ -75,15 +79,15 @@ services:
       PORT: 7651
       DATABASE_PATH: /data/kelvara-control-plane.sqlite
       OBSERVATION_HUB_URL: http://observation-hub:7610
-      OBSERVATION_HUB_TOKEN: ${GOVERNANCE_CONTROL_READ_TOKEN}
-      CONTROL_PLANE_READ_TOKEN: ${CONTROL_PLANE_READ_TOKEN}
-      CONTROL_PLANE_ADMIN_TOKEN: ${CONTROL_PLANE_ADMIN_TOKEN}
-      CONTROL_PLANE_OPERATOR_TOKEN: ${CONTROL_PLANE_OPERATOR_TOKEN}
-      CONTROL_PLANE_AUDITOR_TOKEN: ${CONTROL_PLANE_AUDITOR_TOKEN}
-      CONTROL_PLANE_WALLET_SAFEGUARD_TOKEN: ${CONTROL_PLANE_WALLET_SAFEGUARD_TOKEN}
-      DEMO_POSITION_POLICY_JSON: ${DEMO_POSITION_POLICY_JSON}
-      PERMIT_VAULT_URL: ${PERMIT_VAULT_URL}
-      PERMIT_VAULT_READ_TOKEN: ${PERMIT_VAULT_READ_TOKEN}
+      OBSERVATION_HUB_TOKEN: ${GOVERNANCE_CONTROL_READ_TOKEN:?required}
+      CONTROL_PLANE_READ_TOKEN: ${CONTROL_PLANE_READ_TOKEN:?required}
+      CONTROL_PLANE_ADMIN_TOKEN: ${CONTROL_PLANE_ADMIN_TOKEN:?required}
+      CONTROL_PLANE_OPERATOR_TOKEN: ${CONTROL_PLANE_OPERATOR_TOKEN:?required}
+      CONTROL_PLANE_AUDITOR_TOKEN: ${CONTROL_PLANE_AUDITOR_TOKEN:?required}
+      CONTROL_PLANE_WALLET_SAFEGUARD_TOKEN: ${CONTROL_PLANE_WALLET_SAFEGUARD_TOKEN:?required}
+      DEMO_POSITION_POLICY_JSON: ${DEMO_POSITION_POLICY_JSON:?required}
+      PERMIT_VAULT_URL: ${PERMIT_VAULT_URL:?required}
+      PERMIT_VAULT_READ_TOKEN: ${PERMIT_VAULT_READ_TOKEN:?required}
       GOVERNANCE_VERIFIED_MAPPINGS_JSON: '[{"subjectId":"solana:mainnet-beta:kamino:kvault:B5pjfZAiKjyUEuqB2694NHrsjcaM67uuJaWqjzTVtzR6","network":"mainnet-beta","vaultAuthority":"4GvE6QukisVdvrNDT9CUd8uatmiyUxkkxH2gWyjvyksG","multisigAddress":"4MAbUHwdwWfHYxqoTmZ7j75so6ExG4qPkNhDQi58dPPM","proof":{"signature":"27A9fb8hfp9trfsRMepunPvLM6EoRdYJKtPZyW7wiNJNYGeb1RGWENLHow7SbJq5nPHU1pCWYpYkkGQ4wFSvLAV2","slot":454928412,"vaultIndex":0,"programId":"SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf","derivationInputs":{"multisigAddress":"4MAbUHwdwWfHYxqoTmZ7j75so6ExG4qPkNhDQi58dPPM","vaultIndex":0,"programId":"SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"},"derivedPda":"4GvE6QukisVdvrNDT9CUd8uatmiyUxkkxH2gWyjvyksG"}},{"subjectId":"solana:mainnet-beta:kamino:kvault:BoZDRc1RDY9FzUZZ19WT4GbtTnnbXQ8AGSU5ByEw3ut5","network":"mainnet-beta","vaultAuthority":"9ceRgz579BcfWogs3RE11FKNQaWW7Lmtnev3MXspxUjF","multisigAddress":"4WUP4FFwgWd6gsCd8hR2umCLQA2pFCEaMm21vbyDZubA","proof":{"signature":"5Q9o2zMBbwuhcTPsYFCwiseZixv6WW4ZXRqJopTsGSjVbKKcXtH42sPe3neLPBXHxD3TujTkdsF7Th7N2mPN3nbV","slot":453949314,"vaultIndex":0,"programId":"SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf","derivationInputs":{"multisigAddress":"4WUP4FFwgWd6gsCd8hR2umCLQA2pFCEaMm21vbyDZubA","vaultIndex":0,"programId":"SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"},"derivedPda":"9ceRgz579BcfWogs3RE11FKNQaWW7Lmtnev3MXspxUjF"}},{"subjectId":"solana:devnet:kelvara-governance-lab:position:Ed7aDLAYDq8Q91Gvq2nkHft16dShNaWiTs8hRbgfoiJp","network":"devnet","vaultAuthority":"AtDPByS8KB94HqC6mDm9ta5rdQgZDB62JgXSSmmceVXF","multisigAddress":"CUR3VagHa3wBvYF4HYPnSyhDXTw8bPemCBsR3eF6u67Y","proof":{"signature":"48jpskJ42sBJDpgHXBj46V8w7EYwMrTgux75U17z7XcBtbzaGFYqkcBEsJW84uNQyg29LPCNms4rdNb9ktQUhdQw","slot":509940035,"vaultIndex":0,"programId":"SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf","derivationInputs":{"multisigAddress":"CUR3VagHa3wBvYF4HYPnSyhDXTw8bPemCBsR3eF6u67Y","vaultIndex":0,"programId":"SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"},"derivedPda":"AtDPByS8KB94HqC6mDm9ta5rdQgZDB62JgXSSmmceVXF"}}]'
     ports:
       - "${CONTROL_CENTER_ADMIN_PORT:-127.0.0.1:18651}:7651"
@@ -105,18 +109,18 @@ services:
       PORT: 7610
       DATABASE_PATH: /data/kelvara-observation.sqlite
       CONTROL_PLANE_WALLET_SAFEGUARD_URL: http://control-center:7651
-      CONTROL_PLANE_WALLET_SAFEGUARD_TOKEN: ${CONTROL_PLANE_WALLET_SAFEGUARD_TOKEN}
-      EVACUATION_EVENTS_TOKEN: ${EVACUATION_EVENTS_TOKEN}
-      EVALUATION_RECEIPTS_TOKEN: ${EVALUATION_RECEIPTS_TOKEN}
-      EVACUATION_REVALIDATION_TOKEN: ${EVACUATION_REVALIDATION_TOKEN}
-      WALLET_SAFEGUARD_EVALUATION_TOKEN: ${WALLET_SAFEGUARD_EVALUATION_TOKEN}
-      ASSIGNMENT_TOKEN: ${ASSIGNMENT_TOKEN}
-      VELOCITY_VIEWER_TOKEN: ${VELOCITY_VIEWER_TOKEN}
+      CONTROL_PLANE_WALLET_SAFEGUARD_TOKEN: ${CONTROL_PLANE_WALLET_SAFEGUARD_TOKEN:?required}
+      EVACUATION_EVENTS_TOKEN: ${EVACUATION_EVENTS_TOKEN:?required}
+      EVALUATION_RECEIPTS_TOKEN: ${EVALUATION_RECEIPTS_TOKEN:?required}
+      EVACUATION_REVALIDATION_TOKEN: ${EVACUATION_REVALIDATION_TOKEN:?required}
+      WALLET_SAFEGUARD_EVALUATION_TOKEN: ${WALLET_SAFEGUARD_EVALUATION_TOKEN:?required}
+      ASSIGNMENT_TOKEN: ${ASSIGNMENT_TOKEN:?required}
+      VELOCITY_VIEWER_TOKEN: ${VELOCITY_VIEWER_TOKEN:?required}
       GOVERNANCE_READER_SCOPES_JSON: '{"governance-control-reader":{"7sXHKv8RJG4ENmiDSpBEgiEnktJXPaVEmq2a8QBsvEgJ":["solana:mainnet-beta:kamino:kvault:B5pjfZAiKjyUEuqB2694NHrsjcaM67uuJaWqjzTVtzR6","solana:mainnet-beta:kamino:kvault:BoZDRc1RDY9FzUZZ19WT4GbtTnnbXQ8AGSU5ByEw3ut5"],"DpbwVS5RYtUon7DVPDHXDSkDKVhxermbYytRP9fGhxXv":["solana:devnet:kelvara-governance-lab:position:Ed7aDLAYDq8Q91Gvq2nkHft16dShNaWiTs8hRbgfoiJp"]}}'
-      INDEXER_TOKENS_JSON: ${INDEXER_TOKENS_JSON_WITH_GOVERNANCE_READERS}
-      OBSERVATION_PRODUCER_SOURCES_JSON: ${OBSERVATION_PRODUCER_SOURCES_JSON_WITH_GOVERNANCE_READERS}
+      INDEXER_TOKENS_JSON: ${INDEXER_TOKENS_JSON_WITH_GOVERNANCE_READERS:?required}
+      OBSERVATION_PRODUCER_SOURCES_JSON: ${OBSERVATION_PRODUCER_SOURCES_JSON_WITH_GOVERNANCE_READERS:?required}
       GOVERNANCE_SUBJECT_BINDINGS_JSON: '[{"network":"mainnet-beta","subjectAddress":"4GvE6QukisVdvrNDT9CUd8uatmiyUxkkxH2gWyjvyksG","positionId":"solana:mainnet-beta:kamino:kvault:B5pjfZAiKjyUEuqB2694NHrsjcaM67uuJaWqjzTVtzR6"},{"network":"mainnet-beta","subjectAddress":"9ceRgz579BcfWogs3RE11FKNQaWW7Lmtnev3MXspxUjF","positionId":"solana:mainnet-beta:kamino:kvault:BoZDRc1RDY9FzUZZ19WT4GbtTnnbXQ8AGSU5ByEw3ut5"},{"network":"devnet","subjectAddress":"AtDPByS8KB94HqC6mDm9ta5rdQgZDB62JgXSSmmceVXF","positionId":"solana:devnet:kelvara-governance-lab:position:Ed7aDLAYDq8Q91Gvq2nkHft16dShNaWiTs8hRbgfoiJp"}]'
-      SCENARIO_CAPSULE_REGISTRY_JSON: ${SCENARIO_CAPSULE_REGISTRY_JSON}
+      SCENARIO_CAPSULE_REGISTRY_JSON: ${SCENARIO_CAPSULE_REGISTRY_JSON:?required}
     ports:
       - "${OBSERVATION_HUB_ADMIN_PORT:-127.0.0.1:18711}:7610"
     volumes: [observation-hub-data:/data]
@@ -137,12 +141,12 @@ services:
       HEALTH_PORT: 7620
       INDEXER_ID: kamino-mainnet
       KELVARA_OBSERVATION_HUB_URL: http://observation-hub:7610
-      KELVARA_OBSERVATION_HUB_TOKEN: ${INDEXER_KAMINO_TOKEN}
+      KELVARA_OBSERVATION_HUB_TOKEN: ${INDEXER_KAMINO_TOKEN:?required}
       SOLANA_RPC_PRIMARY: ${SOLANA_RPC_URL}
       HELIUS_RPC_URL: ${HELIUS_RPC_URL:-${SOLANA_RPC_URL}}
       SOLAMI_GRPC_ENDPOINT: ${SOLAMI_GRPC_ENDPOINT:-}
       SOLAMI_GRPC_KEY: ${SOLAMI_GRPC_KEY:-}
-      TARGETS_JSON: ${KAMINO_TARGETS_JSON}
+      TARGETS_JSON: ${KAMINO_TARGETS_JSON:?required}
     ports: ["${KAMINO_DIAGNOSTICS_PORT:-127.0.0.1:18270}:7620"]
     networks: [kelvara-backend, kelvara-egress]
     restart: unless-stopped
@@ -161,9 +165,9 @@ services:
       HEALTH_PORT: 7621
       INDEXER_ID: onre-mainnet
       KELVARA_OBSERVATION_HUB_URL: http://observation-hub:7610
-      KELVARA_OBSERVATION_HUB_TOKEN: ${INDEXER_ONRE_TOKEN}
+      KELVARA_OBSERVATION_HUB_TOKEN: ${INDEXER_ONRE_TOKEN:-}
       SOLANA_RPC_PRIMARY: ${SOLANA_RPC_URL}
-      TARGETS_JSON: ${ONRE_TARGETS_JSON}
+      TARGETS_JSON: ${ONRE_TARGETS_JSON:?required}
     ports: ["${ONRE_DIAGNOSTICS_PORT:-127.0.0.1:18271}:7621"]
     networks: [kelvara-backend, kelvara-egress]
     restart: unless-stopped
@@ -181,8 +185,8 @@ services:
       HEALTH_PORT: 7623
       INDEXER_ID: velocity-mainnet
       KELVARA_OBSERVATION_HUB_URL: http://observation-hub:7610
-      KELVARA_OBSERVATION_HUB_TOKEN: ${INDEXER_VELOCITY_TOKEN}
-      VELOCITY_VIEWER_TOKEN: ${VELOCITY_VIEWER_TOKEN}
+      KELVARA_OBSERVATION_HUB_TOKEN: ${INDEXER_VELOCITY_TOKEN:?required}
+      VELOCITY_VIEWER_TOKEN: ${VELOCITY_VIEWER_TOKEN:?required}
       SOLANA_RPC_URL: ${SOLANA_RPC_URL}
       NETWORK: mainnet-beta
     ports: ["${VELOCITY_DIAGNOSTICS_PORT:-127.0.0.1:18273}:7623"]
@@ -202,13 +206,13 @@ services:
     environment:
       HEALTH_PORT: 7622
       KELVARA_OBSERVATION_HUB_URL: http://observation-hub:7610
-      ASSIGNMENT_TOKEN: ${ASSIGNMENT_TOKEN}
+      ASSIGNMENT_TOKEN: ${ASSIGNMENT_TOKEN:?required}
       SQUADS_RPC_URL_MAINNET: ${SOLANA_RPC_URL}
       SQUADS_RPC_URL_DEVNET: https://api.devnet.solana.com
-      SQUADS_PROGRAM_ID: ${SQUADS_PROGRAM_ID}
+      SQUADS_PROGRAM_ID: ${SQUADS_PROGRAM_ID:?required}
       SQUADS_VERIFIED_MAPPINGS_JSON: '[{"subjectId":"solana:mainnet-beta:kamino:kvault:B5pjfZAiKjyUEuqB2694NHrsjcaM67uuJaWqjzTVtzR6","network":"mainnet-beta","vaultAuthority":"4GvE6QukisVdvrNDT9CUd8uatmiyUxkkxH2gWyjvyksG","multisigAddress":"4MAbUHwdwWfHYxqoTmZ7j75so6ExG4qPkNhDQi58dPPM","proof":{"signature":"27A9fb8hfp9trfsRMepunPvLM6EoRdYJKtPZyW7wiNJNYGeb1RGWENLHow7SbJq5nPHU1pCWYpYkkGQ4wFSvLAV2","slot":454928412,"vaultIndex":0,"programId":"SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf","derivationInputs":{"multisigAddress":"4MAbUHwdwWfHYxqoTmZ7j75so6ExG4qPkNhDQi58dPPM","vaultIndex":0,"programId":"SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"},"derivedPda":"4GvE6QukisVdvrNDT9CUd8uatmiyUxkkxH2gWyjvyksG"}},{"subjectId":"solana:mainnet-beta:kamino:kvault:BoZDRc1RDY9FzUZZ19WT4GbtTnnbXQ8AGSU5ByEw3ut5","network":"mainnet-beta","vaultAuthority":"9ceRgz579BcfWogs3RE11FKNQaWW7Lmtnev3MXspxUjF","multisigAddress":"4WUP4FFwgWd6gsCd8hR2umCLQA2pFCEaMm21vbyDZubA","proof":{"signature":"5Q9o2zMBbwuhcTPsYFCwiseZixv6WW4ZXRqJopTsGSjVbKKcXtH42sPe3neLPBXHxD3TujTkdsF7Th7N2mPN3nbV","slot":453949314,"vaultIndex":0,"programId":"SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf","derivationInputs":{"multisigAddress":"4WUP4FFwgWd6gsCd8hR2umCLQA2pFCEaMm21vbyDZubA","vaultIndex":0,"programId":"SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"},"derivedPda":"9ceRgz579BcfWogs3RE11FKNQaWW7Lmtnev3MXspxUjF"}},{"subjectId":"solana:devnet:kelvara-governance-lab:position:Ed7aDLAYDq8Q91Gvq2nkHft16dShNaWiTs8hRbgfoiJp","network":"devnet","vaultAuthority":"AtDPByS8KB94HqC6mDm9ta5rdQgZDB62JgXSSmmceVXF","multisigAddress":"CUR3VagHa3wBvYF4HYPnSyhDXTw8bPemCBsR3eF6u67Y","proof":{"signature":"48jpskJ42sBJDpgHXBj46V8w7EYwMrTgux75U17z7XcBtbzaGFYqkcBEsJW84uNQyg29LPCNms4rdNb9ktQUhdQw","slot":509940035,"vaultIndex":0,"programId":"SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf","derivationInputs":{"multisigAddress":"CUR3VagHa3wBvYF4HYPnSyhDXTw8bPemCBsR3eF6u67Y","vaultIndex":0,"programId":"SQDS4ep65T869zMMBKyuUq6aD6EgTu8psMjkvj52pCf"},"derivedPda":"AtDPByS8KB94HqC6mDm9ta5rdQgZDB62JgXSSmmceVXF"}}]'
       SQUADS_ASSIGNMENTS_JSON: '[{"assignmentId":"squads-kamino-vault-1","subjectId":"solana:mainnet-beta:kamino:kvault:B5pjfZAiKjyUEuqB2694NHrsjcaM67uuJaWqjzTVtzR6","network":"mainnet-beta","vaultAuthority":"4GvE6QukisVdvrNDT9CUd8uatmiyUxkkxH2gWyjvyksG","multisigAddress":"4MAbUHwdwWfHYxqoTmZ7j75so6ExG4qPkNhDQi58dPPM","vaultIndex":0,"enabled":true,"credentialScope":"scope:governance:solana:mainnet-beta:kamino:kvault:B5pjfZAiKjyUEuqB2694NHrsjcaM67uuJaWqjzTVtzR6"},{"assignmentId":"squads-kamino-vault-2","subjectId":"solana:mainnet-beta:kamino:kvault:BoZDRc1RDY9FzUZZ19WT4GbtTnnbXQ8AGSU5ByEw3ut5","network":"mainnet-beta","vaultAuthority":"9ceRgz579BcfWogs3RE11FKNQaWW7Lmtnev3MXspxUjF","multisigAddress":"4WUP4FFwgWd6gsCd8hR2umCLQA2pFCEaMm21vbyDZubA","vaultIndex":0,"enabled":true,"credentialScope":"scope:governance:solana:mainnet-beta:kamino:kvault:BoZDRc1RDY9FzUZZ19WT4GbtTnnbXQ8AGSU5ByEw3ut5"},{"assignmentId":"squads-governance-lab-devnet","subjectId":"solana:devnet:kelvara-governance-lab:position:Ed7aDLAYDq8Q91Gvq2nkHft16dShNaWiTs8hRbgfoiJp","network":"devnet","vaultAuthority":"AtDPByS8KB94HqC6mDm9ta5rdQgZDB62JgXSSmmceVXF","multisigAddress":"CUR3VagHa3wBvYF4HYPnSyhDXTw8bPemCBsR3eF6u67Y","vaultIndex":0,"enabled":true,"credentialScope":"scope:governance:solana:devnet:kelvara-governance-lab"}]'
-      SQUADS_CREDENTIALS_JSON: ${SQUADS_CREDENTIALS_JSON_WITH_GOVERNANCE_LAB}
+      SQUADS_CREDENTIALS_JSON: ${SQUADS_CREDENTIALS_JSON_WITH_GOVERNANCE_LAB:?required}
       SQUADS_DATA_DIR: /data
     ports: ["${SQUADS_DIAGNOSTICS_PORT:-127.0.0.1:18272}:7622"]
     volumes: [squads-data:/data]
@@ -235,16 +239,31 @@ services:
     security_opt: [no-new-privileges:true]
     cap_drop: [ALL]
     healthcheck: {test: [CMD, node, -e, "fetch('http://127.0.0.1:8090/healthz').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"], interval: 10s, timeout: 3s, retries: 5}
+  cloudflare-cutover-gate:
+    build: {context: ., dockerfile: services/cloudflare-gate/Dockerfile}
+    profiles: [cloudflared]
+    environment:
+      KELVARA_RELEASE_SHA: ${KELVARA_RELEASE_SHA:?set immutable production Git commit}
+    volumes:
+      - ./production/approvals:/run/kelvara:ro
+    depends_on:
+      program-backend: {condition: service_healthy}
+      control-center: {condition: service_healthy}
+      observation-hub: {condition: service_healthy}
+      indexer-squads: {condition: service_healthy}
+      status-page: {condition: service_healthy}
+    networks: [kelvara-backend]
+    restart: "no"
   cloudflared:
     image: "cloudflare/cloudflared:2025.9.1"
     profiles: [cloudflared]
     command: tunnel --no-autoupdate --config /etc/cloudflared/config.yml run
     environment:
-      TUNNEL_TOKEN: ${CLOUDFLARED_TUNNEL_TOKEN}
+      TUNNEL_TOKEN: ${CLOUDFLARED_TUNNEL_TOKEN:?required}
     volumes:
       - ./cloudflared/config.yml:/etc/cloudflared/config.yml:ro
     depends_on:
-      program-backend: {condition: service_healthy}
+      cloudflare-cutover-gate: {condition: service_completed_successfully}
     networks: [kelvara-egress, kelvara-backend]
     restart: unless-stopped
 networks:
