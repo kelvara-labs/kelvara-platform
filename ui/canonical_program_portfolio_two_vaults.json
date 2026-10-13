@@ -1,0 +1,84 @@
+{
+  "policyRevision": 7,
+  "positions": [
+    {
+      "targetId": "solana:mainnet:kamino:kvault:B5pjfZAiKjyUEuqB2694NHrsjcaM67uuJaWqjzTVtzR6",
+      "protocol": "kamino",
+      "adapterId": "kamino",
+      "adapterVersion": 1,
+      "display": "Institutional Commodity Yield",
+      "details": {
+        "vault": "B5pjfZAiKjyUEuqB2694NHrsjcaM67uuJaWqjzTVtzR6",
+        "totalShares": "1",
+        "tokensPerShare": "2",
+        "underlyingAmount": "2",
+        "apy7d": "0.1"
+      },
+      "chain": "solana",
+      "network": "mainnet",
+      "protocolId": "kamino",
+      "resourceType": "kvault",
+      "address": "B5pjfZAiKjyUEuqB2694NHrsjcaM67uuJaWqjzTVtzR6",
+      "displayName": "Institutional Commodity Yield"
+    },
+    {
+      "targetId": "solana:mainnet:kamino:kvault:BoZDRc1RDY9FzUZZ19WT4GbtTnnbXQ8AGSU5ByEw3ut5",
+      "protocol": "kamino",
+      "adapterId": "kamino",
+      "adapterVersion": 1,
+      "display": "Steakhouse USDG High Yield",
+      "details": {
+        "vault": "BoZDRc1RDY9FzUZZ19WT4GbtTnnbXQ8AGSU5ByEw3ut5",
+        "totalShares": "2",
+        "tokensPerShare": "2",
+        "underlyingAmount": "4",
+        "apy7d": "0.1"
+      },
+      "chain": "solana",
+      "network": "mainnet",
+      "protocolId": "kamino",
+      "resourceType": "kvault",
+      "address": "BoZDRc1RDY9FzUZZ19WT4GbtTnnbXQ8AGSU5ByEw3ut5",
+      "displayName": "Steakhouse USDG High Yield"
+    }
+  ],
+  "safeguards": [
+    {
+      "bindingId": "binding-0",
+      "targetId": "solana:mainnet:kamino:kvault:B5pjfZAiKjyUEuqB2694NHrsjcaM67uuJaWqjzTVtzR6",
+      "ruleId": "rule-1",
+      "ruleVersion": 1,
+      "display": {
+        "name": "Institutional Commodity Yield"
+      },
+      "scope": "global",
+      "result": "unknown",
+      "reason": "missing_receipt",
+      "receiptId": null
+    },
+    {
+      "bindingId": "binding-1",
+      "targetId": "solana:mainnet:kamino:kvault:BoZDRc1RDY9FzUZZ19WT4GbtTnnbXQ8AGSU5ByEw3ut5",
+      "ruleId": "rule-1",
+      "ruleVersion": 1,
+      "display": {
+        "name": "Steakhouse USDG High Yield"
+      },
+      "scope": "global",
+      "result": "unknown",
+      "reason": "missing_receipt",
+      "receiptId": null
+    }
+  ],
+  "protocolStatuses": [
+    {
+      "protocol": "kamino",
+      "status": "available"
+    }
+  ],
+  "coverage": {
+    "state": "partial",
+    "expected": 2,
+    "satisfied": 0
+  }
+}

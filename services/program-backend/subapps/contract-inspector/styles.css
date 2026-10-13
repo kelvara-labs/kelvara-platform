@@ -1,0 +1,27 @@
+:root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, sans-serif; color:#171717; background:#f5f5f2; }
+* { box-sizing:border-box; }
+body { margin:0; }
+main { width:min(1100px, calc(100% - 32px)); margin:0 auto; padding:48px 0 28px; }
+header { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; border-bottom:1px solid #cfcfca; padding-bottom:24px; }
+.eyebrow,.number { color:#666; font:600 12px/1.2 ui-monospace, monospace; letter-spacing:.08em; }
+h1 { font-size:clamp(36px,6vw,72px); line-height:.95; margin:8px 0 0; letter-spacing:-.055em; font-weight:650; }
+.network { display:flex; padding:4px; border:1px solid #bbb; background:white; border-radius:8px; }
+button { font:inherit; cursor:pointer; }
+.network button { border:0; background:transparent; padding:9px 14px; border-radius:5px; }
+.network button.active { background:#171717; color:white; }
+.status { min-height:48px; display:flex; align-items:center; gap:9px; border-bottom:1px solid #cfcfca; color:#666; font-size:14px; }
+.status strong { color:#171717; }
+#dot { width:8px; height:8px; background:#79b900; border-radius:50%; }
+#rpc { margin-left:auto; font-family:ui-monospace,monospace; font-size:12px; }
+.grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:16px 0; }
+.card { background:white; border:1px solid #d8d8d2; border-radius:10px; padding:24px; box-shadow:0 1px 0 rgba(0,0,0,.03); }
+h2 { font-size:26px; margin:8px 0; letter-spacing:-.03em; }
+.card>p:not(.number) { color:#666; line-height:1.5; min-height:66px; }
+textarea { width:100%; height:260px; resize:vertical; border:1px solid #ccc; border-radius:6px; padding:14px; background:#fafafa; font:12px/1.55 ui-monospace,monospace; color:#222; }
+textarea:focus { outline:2px solid #171717; outline-offset:1px; }
+.primary { width:100%; margin-top:12px; border:0; border-radius:6px; padding:12px; background:#d5fb42; color:#171814; font-weight:700; }
+pre { min-height:55px; white-space:pre-wrap; padding:12px; background:#f5f5f2; border-radius:6px; font:12px/1.45 ui-monospace,monospace; }
+pre.valid { background:#eef8d7; color:#365800; }
+pre.invalid { background:#fff0ed; color:#8d2417; }
+footer { color:#777; text-align:center; padding:18px; font-size:13px; }
+@media(max-width:760px){ main{padding-top:24px}.grid{grid-template-columns:1fr}header{align-items:flex-start;flex-direction:column}.status{align-items:flex-start;flex-wrap:wrap;padding:13px 0}#rpc{margin-left:17px;width:100%}.card>p:not(.number){min-height:auto} }

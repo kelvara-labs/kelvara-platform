@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width,initial-scale=1">
+ <meta name="color-scheme" content="light">
+ <meta name="theme-color" content="#f6f7f4">
+ <title>Kelvara Status</title>
+ <link rel="icon" href="/icon.png" type="image/png">
+ <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+ <header class="topbar wrap">
+  <a class="wordmark" href="https://kelvara.xyz" aria-label="Kelvara home"><img class="mark" src="/icon.png" alt="">Kelvara</a>
+  <nav class="nav"><a href="https://app.kelvara.xyz">Open Kelvara</a></nav>
+ </header>
+ <main class="wrap">
+  <section class="hero">
+   <p class="eyebrow">SERVICE STATUS</p>
+   <h1>Kelvara systems</h1>
+   <div id="overall" class="overall operational"><span class="pulse"></span><strong>All systems operational</strong></div>
+   <p class="updated" id="updated">Checking service health…</p>
+  </section>
+  <section class="status-shell" aria-labelledby="uptime-heading">
+   <div class="section-heading">
+    <div><p class="section-kicker">LIVE HEALTH</p><h2 id="uptime-heading">System uptime</h2></div>
+    <p>Last 24 hours · checks every minute</p>
+   </div>
+   <div id="summary" class="summary" aria-label="Status summary"></div>
+   <div id="services" class="service-list"></div>
+  </section>
+  <button id="toggle-details" class="details-toggle" aria-expanded="false">Show system details</button>
+  <section id="details" class="status-shell hidden">
+   <div class="section-heading"><div><p class="section-kicker">MORE SIGNALS</p><h2>Detailed systems</h2></div><p>Business-facing protection signals</p></div>
+   <div id="detail-services" class="service-list"></div>
+  </section>
+ </main>
+ <footer class="footer"><div class="footer-inner"><div class="footer-left"><div class="footer-brand">Kelvara</div><div class="footer-copy">Evidence before assertion.</div></div><div class="footer-right"><a class="footer-solana" href="https://solana.com" target="_blank" rel="noopener noreferrer"><span>Built on Solana</span><img src="/assets/networks/solana.svg" alt=""></a><div class="footer-copy">© <span data-current-year></span> Kelvara</div></div></div></footer>
+ <script src="/app.js"></script>
+ <script>document.querySelectorAll('[data-current-year]').forEach(node=>node.textContent=String(new Date().getFullYear()))</script>
+</body>
+</html>

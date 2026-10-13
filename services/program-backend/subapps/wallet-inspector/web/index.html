@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Kelvara · Position Monitor</title><link rel="stylesheet" href="/styles.css"></head>
+<body><main>
+<header><div><strong>Kelvara</strong><span>Position monitor</span></div><div id="services" class="services" aria-label="Backend services"></div></header>
+<section class="hero"><div><h1>Monitor a position</h1><p>Read-only wallet discovery and evidence-linked alerts.</p></div><label>Network<select id="cluster"><option value="mainnet">Mainnet</option><option value="devnet">Devnet</option><option value="devnet-fixture" selected>Devnet-fixture</option></select></label></section>
+<section class="connect card"><div><span class="eyebrow">WALLET</span><h2 id="wallet-state">No wallet connected</h2><p id="wallet-detail">Connect the deterministic fixture wallet or inspect a public address.</p></div><button id="connect-wallet" type="button">Connect fixture wallet</button></section>
+<form id="inspect-form" class="card" novalidate><label for="wallet">Public wallet or token account</label><div class="row"><input id="wallet" autocomplete="off" spellcheck="false" placeholder="Wallet or token account"><button id="inspect-button" type="submit">Find position</button></div><div class="quick"><button id="fixture-button" type="button">Fixture holder</button><button id="example-button" type="button">Mainnet example</button></div></form>
+<section id="status" class="status hidden" role="status" aria-live="polite"></section>
+<section id="results" class="results hidden" aria-live="polite"></section>
+<section class="card monitoring"><div class="section-head"><div><span class="eyebrow">MONITORING</span><h2>Alerts</h2></div><button id="refresh" type="button" class="secondary">Refresh</button></div><div id="alerts"><p class="empty">No fixture alerts.</p></div></section>
+<footer>Fixture data is simulation-only. Mainnet and Devnet remain separate chain-read environments.</footer>
+</main><script type="module" src="/app.js"></script></body></html>

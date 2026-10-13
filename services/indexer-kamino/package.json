@@ -1,0 +1,10 @@
+{
+  "name": "@kelvara/indexer-kamino",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@kelvara/contracts": "0.1.0",
+    "@kelvara/solana-transport": "0.1.0"
+  }
+}

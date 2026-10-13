@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark light">
+<script>try{const q=new URLSearchParams(location.search).get('theme');const t=['light','dark','system'].includes(q)?q:(localStorage.getItem('kelvara-theme')||'system');document.documentElement.dataset.theme=t}catch{}</script>
+<title>Kelvara Kamino Indexer</title>
+<link rel="stylesheet" href="./styles.css?v=7">
+</head>
+<body data-status-endpoint="./api/status">
+<header class="topbar">
+  <div class="brand"><span class="mark">K</span><div><strong>Kamino Indexer</strong><span>MAINNET / READ ONLY</span></div></div>
+  <div class="top-status"><span id="freshness">Awaiting first cycle</span><div class="theme-switch" aria-label="Color theme"><button type="button" data-theme="light" title="Light theme">Light</button><button type="button" data-theme="dark" title="Dark theme">Dark</button><button type="button" data-theme="system" title="Use system theme">Auto</button></div><span id="overall" class="state unknown">STARTING</span></div>
+</header>
+<div class="shell">
+  <nav class="rail" aria-label="Monitor views">
+    <div class="rail-label">MONITOR</div>
+    <button class="nav-item active" data-pane="overview"><span class="nav-full">Operational overview</span><span class="nav-short">Overview</span></button>
+    <button class="nav-item" data-pane="targets"><span class="nav-full">Target inventory</span><span class="nav-short">Targets</span> <span id="nav-target-count">—</span></button>
+    <button class="nav-item" data-pane="continuity">Continuity <span id="nav-failure-count">—</span></button>
+    <div class="rail-label">SYSTEM</div>
+    <dl class="rail-facts">
+      <div><dt>Indexer</dt><dd id="indexer-id">—</dd></div>
+      <div><dt>Network</dt><dd id="network">—</dd></div>
+      <div><dt>Version</dt><dd id="version">—</dd></div>
+    </dl>
+    <div class="readonly">OBSERVATION ONLY<br>No signing authority</div>
+  </nav>
+
+  <main>
+    <section class="pane active" id="pane-overview" data-pane-panel="overview">
+      <div class="page-head"><div><span class="kicker">COMMAND / STATUS</span><h1>Operational overview</h1><p>Current process health, execution continuity, and evidence delivery.</p></div><button id="refresh" type="button">Refresh</button></div>
+
+      <div class="alert-strip" id="attention"><span class="signal"></span><strong id="attention-title">Initializing worker</strong><span id="attention-copy">No completed observation yet.</span></div>
+
+      <div class="kpi-grid">
+        <article class="kpi primary"><span>Process uptime</span><strong id="uptime">—</strong><small id="started-at">Started —</small></article>
+        <article class="kpi"><span>Cycle success</span><strong id="success-rate">—</strong><small><b id="cycle-ok">—</b> successful / <b id="cycle-total">—</b> total</small></article>
+        <article class="kpi"><span>Target availability</span><strong id="target-health">—</strong><small><b id="target-ok">—</b> healthy / <b id="target-total">—</b> configured</small></article>
+        <article class="kpi"><span>RPC mean latency</span><strong id="rpc-latency">—</strong><small><b id="rpc-samples">—</b> completed samples</small></article>
+        <article class="kpi"><span>Last finalized slot</span><strong id="last-slot">—</strong><small id="last-cycle">No completed cycle</small></article>
+        <article class="kpi"><span>History baseline</span><strong id="history-days">—</strong><small>Configured transaction lookback</small></article>
+      </div>
+
+      <div class="overview-grid">
+        <section class="panel"><div class="panel-head"><div><span class="kicker">EXECUTION</span><h2>Cycle summary</h2></div><span class="meta" id="poll-rate">—</span></div>
+          <div class="metric-table">
+            <div><span>Total cycles</span><strong id="cycles-total">—</strong></div><div><span>Failed cycles</span><strong id="cycles-failed">—</strong></div>
+            <div><span>Average duration</span><strong id="avg-duration">—</strong></div><div><span>Last duration</span><strong id="last-duration">—</strong></div>
+            <div><span>Canary triggers</span><strong id="canary-count">—</strong></div><div><span>RPC change triggers</span><strong id="change-count">—</strong></div>
+          </div>
+        </section>
+        <section class="panel"><div class="panel-head"><div><span class="kicker">DEPENDENCIES</span><h2>RPC providers</h2></div><span class="meta">LIVE</span></div>
+          <div class="dependency-list">
+            <div><span class="dot" id="live-dot"></span><div><strong>WebSocket listener</strong><small id="live-detail">—</small></div><b id="live-state">UNKNOWN</b></div>
+            <div><span class="dot" id="backend-dot"></span><div><strong>Evidence backend</strong><small id="backend-detail">—</small></div><b id="backend-state">UNKNOWN</b></div>
+            <div><span class="dot" id="notify-dot"></span><div><strong>Alert delivery</strong><small id="notify-detail">—</small></div><b id="notify-state">UNKNOWN</b></div>
+            <div><span class="dot"></span><div><strong>Canary schedule</strong><small id="canary-detail">—</small></div><b id="canary-state">UNKNOWN</b></div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="pane" id="pane-targets" data-pane-panel="targets" hidden>
+      <div class="page-head"><div><span class="kicker">OPERATIONS / TARGETS</span><h1>Target inventory</h1><p>Vault-level source, freshness, finalized head, and evidence state.</p></div></div>
+      <section class="panel table-panel"><div class="table-scroll"><table><thead><tr><th>Target</th><th>State</th><th>Finalized slot</th><th>Provider</th><th>Latency</th><th>Observed</th><th>Delivery</th></tr></thead><tbody id="target-rows"><tr><td colspan="7" class="empty">Awaiting first cycle.</td></tr></tbody></table></div></section>
+    </section>
+
+    <section class="pane" id="pane-continuity" data-pane-panel="continuity" hidden>
+      <div class="page-head"><div><span class="kicker">EVIDENCE / HISTORY</span><h1>Continuity</h1><p>Bounded in-process cycle record. Restart resets this view.</p></div></div>
+      <section class="panel"><div class="panel-head"><div><span class="kicker">RECENT EXECUTION</span><h2>Cycle ledger</h2></div><span class="meta" id="continuity-count">0 RECORDS</span></div><div id="continuity-chart" class="continuity-chart" aria-label="Recent cycle outcomes"></div><div class="table-scroll"><table><thead><tr><th>Observed</th><th>Result</th><th>Trigger</th><th>Duration</th></tr></thead><tbody id="continuity-rows"><tr><td colspan="4" class="empty">No completed cycles.</td></tr></tbody></table></div></section>
+    </section>
+  </main>
+</div>
+<footer><span>Kelvara monitoring plane</span><span>Read only · Sequential execution · Finalized commitment</span></footer>
+<script src="./app.js?v=7"></script>
+</body>
+</html>

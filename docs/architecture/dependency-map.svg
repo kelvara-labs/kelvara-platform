@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1120" viewBox="0 0 1440 1120" role="img" aria-labelledby="title desc">
+  <title id="title">Kelvara service dependency map</title>
+  <desc id="desc">Architecture map showing the browser and wallet, program backend, Control Center, Observation Hub, protocol indexers, local data stores, Permit Vault, Solana, Kamino, and Squads dependencies. Solid arrows are application and evidence flows; dashed rose arrows are authentication and signing boundaries.</desc>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#1e293b" stroke-width="0.7"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0L10 4L0 8Z" fill="#64748b"/>
+    </marker>
+    <marker id="arrowCyan" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0L10 4L0 8Z" fill="#22d3ee"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0L10 4L0 8Z" fill="#34d399"/>
+    </marker>
+    <marker id="arrowRose" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0L10 4L0 8Z" fill="#fb7185"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+    <style>
+      .bg{fill:#020617}.boundary{fill:#0f172a;fill-opacity:.36;stroke:#334155;stroke-width:1.5;stroke-dasharray:8 6}.boundary-label{font:600 13px 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.08em;fill:#94a3b8}.box{stroke-width:1.7;filter:url(#shadow)}.front{fill:#083344;fill-opacity:.86;stroke:#22d3ee}.back{fill:#064e3b;fill-opacity:.78;stroke:#34d399}.data{fill:#4c1d95;fill-opacity:.68;stroke:#a78bfa}.external{fill:#1e293b;fill-opacity:.92;stroke:#94a3b8}.security{fill:#881337;fill-opacity:.68;stroke:#fb7185}.cloud{fill:#78350f;fill-opacity:.65;stroke:#fbbf24}.title{font:700 17px 'JetBrains Mono',ui-monospace,monospace;fill:#f8fafc}.subtitle{font:400 12px 'JetBrains Mono',ui-monospace,monospace;fill:#94a3b8}.tiny{font:500 10px 'JetBrains Mono',ui-monospace,monospace;fill:#cbd5e1}.head{font:700 30px 'JetBrains Mono',ui-monospace,monospace;fill:#f8fafc}.deck{font:400 14px 'JetBrains Mono',ui-monospace,monospace;fill:#94a3b8}.flow{fill:none;stroke:#64748b;stroke-width:2;marker-end:url(#arrow)}.flow-cyan{fill:none;stroke:#22d3ee;stroke-width:2.2;marker-end:url(#arrowCyan)}.flow-green{fill:none;stroke:#34d399;stroke-width:2.2;marker-end:url(#arrowGreen)}.flow-rose{fill:none;stroke:#fb7185;stroke-width:2;stroke-dasharray:7 6;marker-end:url(#arrowRose)}.flow-label{font:700 12px 'JetBrains Mono',ui-monospace,monospace;fill:#ffffff;paint-order:stroke;stroke:#020617;stroke-width:1px;stroke-linejoin:round}.section{font:700 12px 'JetBrains Mono',ui-monospace,monospace;letter-spacing:.1em;fill:#64748b}.legend{font:500 11px 'JetBrains Mono',ui-monospace,monospace;fill:#cbd5e1}
+    </style>
+  </defs>
+
+  <rect class="bg" width="1440" height="1120"/>
+  <rect width="1440" height="1120" fill="url(#grid)"/>
+
+  <circle cx="62" cy="53" r="7" fill="#22d3ee"/>
+  <text class="head" x="84" y="63">Kelvara architecture</text>
+  <text class="deck" x="84" y="91">Wallet-scoped discovery · canonical evidence · fail-closed safeguards · explicit signing</text>
+
+  <!-- Trust boundaries -->
+  <rect class="boundary" x="40" y="135" width="1360" height="150" rx="16"/>
+  <text class="boundary-label" x="58" y="159">USER TRUST DOMAIN</text>
+
+  <rect class="boundary" x="40" y="320" width="1360" height="520" rx="16"/>
+  <text class="boundary-label" x="58" y="344">KELVARA DOCKER TRUST DOMAIN · INTERNAL SERVICE NETWORK + LOOPBACK ADMIN</text>
+
+  <rect class="boundary" x="40" y="875" width="1360" height="155" rx="16"/>
+  <text class="boundary-label" x="58" y="899">EXTERNAL READ SOURCES / EXPLICIT DEPENDENCIES</text>
+
+  <!-- Connections first, behind boxes -->
+  <path class="flow-cyan" d="M260 230H400"/>
+  <text class="flow-label" x="330" y="220" text-anchor="middle">HTTPS · catalog · workspace</text>
+
+  <path class="flow-rose" d="M590 194H720"/>
+  <text class="flow-label" x="655" y="183" text-anchor="middle">challenge + signMessage</text>
+  <path class="flow-rose" d="M720 246H590"/>
+  <text class="flow-label" x="655" y="265" text-anchor="middle">explicit transaction approval</text>
+
+  <path class="flow-cyan" d="M500 285V382"/>
+  <text class="flow-label" x="512" y="335">session + APIs</text>
+
+  <path class="flow-green" d="M650 430H780"/>
+  <text class="flow-label" x="715" y="418" text-anchor="middle">mappings · baselines · readiness</text>
+
+  <path class="flow-green" d="M650 495H780"/>
+  <text class="flow-label" x="715" y="485" text-anchor="middle">evidence · receipts</text>
+
+  <path class="flow-green" d="M990 500V600"/>
+  <text class="flow-label" x="1003" y="555">canonical observations</text>
+
+  <path class="flow-green" d="M315 668H780"/>
+  <path class="flow-green" d="M540 668H780"/>
+  <path class="flow-green" d="M765 668H780"/>
+  <text class="flow-label" x="660" y="654" text-anchor="middle">scoped producer writes</text>
+
+  <path class="flow" d="M900 550V760"/>
+  <path class="flow" d="M1080 550V760"/>
+  <text class="flow-label" x="912" y="740">durable evidence</text>
+  <text class="flow-label" x="1092" y="740">control state</text>
+
+  <path class="flow" d="M1160 430H1270V925H1165"/>
+  <text class="flow-label" x="1282" y="675" transform="rotate(90 1282 675)" text-anchor="middle">readiness only · scoped token</text>
+
+  <path class="flow" d="M315 715V925"/>
+  <path class="flow" d="M540 715V925"/>
+  <path class="flow" d="M765 715V925"/>
+  <text class="flow-label" x="325" y="860">RPC/account reads</text>
+
+  <path class="flow" d="M390 925H315V715"/>
+  <path class="flow" d="M720 925H540V715"/>
+  <path class="flow" d="M720 965H765V715"/>
+
+  <path class="flow" d="M1170 760H1305V710H1160"/>
+  <text class="flow-label" x="1235" y="750" text-anchor="middle">health probes</text>
+
+  <path class="flow-rose" d="M830 230H1250V925H1165"/>
+  <text class="flow-label" x="1262" y="385" transform="rotate(90 1262 385)" text-anchor="middle">wallet signs exact reviewed bytes</text>
+
+  <!-- User components -->
+  <rect class="box front" x="80" y="180" width="180" height="76" rx="10"/>
+  <text class="title" x="170" y="211" text-anchor="middle">Potential client / holder</text>
+  <text class="subtitle" x="170" y="234" text-anchor="middle">Browser · public landing</text>
+  <text class="tiny" x="170" y="249" text-anchor="middle">Mainnet · Devnet · Demo</text>
+
+  <rect class="box front" x="400" y="178" width="190" height="82" rx="10"/>
+  <text class="title" x="495" y="208" text-anchor="middle">Kelvara UI</text>
+  <text class="subtitle" x="495" y="231" text-anchor="middle">catalog + workspace</text>
+  <text class="tiny" x="495" y="247" text-anchor="middle">portfolio · safeguards · protection</text>
+
+  <rect class="box security" x="720" y="178" width="220" height="82" rx="10"/>
+  <text class="title" x="830" y="208" text-anchor="middle">Solana wallet</text>
+  <text class="subtitle" x="830" y="231" text-anchor="middle">keys never leave wallet</text>
+  <text class="tiny" x="830" y="247" text-anchor="middle">auth message ≠ transaction consent</text>
+
+  <!-- Internal components -->
+  <rect class="box back" x="310" y="382" width="340" height="168" rx="12"/>
+  <text class="section" x="330" y="407">APPLICATION EDGE</text>
+  <text class="title" x="330" y="440">program-backend</text>
+  <text class="subtitle" x="330" y="466">UI hosting · wallet sessions · portfolio projection</text>
+  <text class="subtitle" x="330" y="489">governance · safeguards · protection APIs</text>
+  <text class="tiny" x="330" y="520">127.0.0.1:18437 · public app edge</text>
+
+  <rect class="box back" x="780" y="382" width="380" height="168" rx="12"/>
+  <text class="section" x="800" y="407">CONTROL PLANE</text>
+  <text class="title" x="800" y="440">Control Center</text>
+  <text class="subtitle" x="800" y="466">verified targets · enrollment · baselines</text>
+  <text class="subtitle" x="800" y="489">authority reconciliation · permit readiness</text>
+  <text class="tiny" x="800" y="520">127.0.0.1:18651 · least-privilege roles</text>
+
+  <rect class="box back" x="780" y="600" width="380" height="115" rx="12"/>
+  <text class="section" x="800" y="625">EVIDENCE AUTHORITY</text>
+  <text class="title" x="800" y="656">Observation Hub</text>
+  <text class="subtitle" x="800" y="679">normalized evidence · governance actions · receipts</text>
+  <text class="tiny" x="800" y="699">source identity · slot · observed time · freshness</text>
+
+  <rect class="box back" x="215" y="610" width="200" height="105" rx="10"/>
+  <text class="title" x="315" y="644" text-anchor="middle">Kamino indexer</text>
+  <text class="subtitle" x="315" y="668" text-anchor="middle">vault + position evidence</text>
+  <text class="tiny" x="315" y="693" text-anchor="middle">scoped producer</text>
+
+  <rect class="box back" x="440" y="610" width="200" height="105" rx="10"/>
+  <text class="title" x="540" y="644" text-anchor="middle">Squads indexer</text>
+  <text class="subtitle" x="540" y="668" text-anchor="middle">multisig + proposal lifecycle</text>
+  <text class="tiny" x="540" y="693" text-anchor="middle">verified assignments</text>
+
+  <rect class="box back" x="665" y="610" width="100" height="105" rx="10"/>
+  <text class="title" x="715" y="640" text-anchor="middle">Velocity</text>
+  <text class="subtitle" x="715" y="663" text-anchor="middle">activity</text>
+  <text class="tiny" x="715" y="688" text-anchor="middle">mainnet</text>
+
+  <rect class="box data" x="790" y="760" width="220" height="58" rx="9"/>
+  <text class="title" x="900" y="787" text-anchor="middle">Observation SQLite</text>
+  <text class="tiny" x="900" y="805" text-anchor="middle">canonical durable evidence</text>
+
+  <rect class="box data" x="1030" y="760" width="220" height="58" rx="9"/>
+  <text class="title" x="1140" y="787" text-anchor="middle">Control SQLite</text>
+  <text class="tiny" x="1140" y="805" text-anchor="middle">mappings · audit · enrollment</text>
+
+  <rect class="box back" x="1170" y="650" width="180" height="65" rx="9"/>
+  <text class="title" x="1260" y="679" text-anchor="middle">Status page</text>
+  <text class="subtitle" x="1260" y="701" text-anchor="middle">independent probes</text>
+
+  <!-- External components -->
+  <rect class="box cloud" x="120" y="925" width="270" height="72" rx="10"/>
+  <text class="title" x="255" y="954" text-anchor="middle">Solana RPC</text>
+  <text class="subtitle" x="255" y="978" text-anchor="middle">Mainnet / Devnet chain state</text>
+
+  <rect class="box external" x="450" y="925" width="270" height="72" rx="10"/>
+  <text class="title" x="585" y="954" text-anchor="middle">Kamino API</text>
+  <text class="subtitle" x="585" y="978" text-anchor="middle">supported position data</text>
+
+  <rect class="box external" x="780" y="925" width="270" height="72" rx="10"/>
+  <text class="title" x="915" y="954" text-anchor="middle">Squads program</text>
+  <text class="subtitle" x="915" y="978" text-anchor="middle">verified multisig governance</text>
+
+  <rect class="box security" x="1110" y="925" width="250" height="72" rx="10"/>
+  <text class="title" x="1235" y="954" text-anchor="middle">Permit Vault</text>
+  <text class="subtitle" x="1235" y="978" text-anchor="middle">signed permit readiness authority</text>
+
+  <!-- Legend -->
+  <text class="section" x="60" y="1070">LEGEND</text>
+  <rect class="front" x="145" y="1053" width="24" height="15" rx="3"/><text class="legend" x="178" y="1066">frontend</text>
+  <rect class="back" x="270" y="1053" width="24" height="15" rx="3"/><text class="legend" x="303" y="1066">service</text>
+  <rect class="data" x="395" y="1053" width="24" height="15" rx="3"/><text class="legend" x="428" y="1066">durable data</text>
+  <rect class="security" x="550" y="1053" width="24" height="15" rx="3"/><text class="legend" x="583" y="1066">security/signing boundary</text>
+  <line x1="810" y1="1060" x2="850" y2="1060" class="flow-green"/><text class="legend" x="861" y="1066">evidence/API flow</text>
+  <line x1="1020" y1="1060" x2="1060" y2="1060" class="flow-rose"/><text class="legend" x="1071" y="1066">wallet approval flow</text>
+</svg>

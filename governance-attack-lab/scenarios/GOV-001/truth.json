@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "scenarioId": "GOV-001",
+  "name": "Threshold reduction",
+  "effectiveStateInitially": { "threshold": 3, "members": 5 },
+  "governanceIntent": { "type": "change-threshold", "from": 3, "to": 1 },
+  "invariants": {
+    "effectiveThresholdBeforeExecution": 3,
+    "effectiveThresholdAfterExecution": 1,
+    "memberCountAfterExecution": 5
+  },
+  "expectedRisk": { "severity": "critical", "category": "governance/control degradation" }
+}

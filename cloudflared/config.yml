@@ -1,0 +1,6 @@
+ingress:
+  - hostname: api.kelvara.xyz
+    service: http://program-backend:8080
+  - hostname: status.kelvara.xyz
+    service: http://status-page:8090
+  - service: http_status:404

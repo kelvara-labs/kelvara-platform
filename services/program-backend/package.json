@@ -1,0 +1,28 @@
+{
+  "name": "kelvara-onre",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/platform/http/server.js",
+    "ingest": "node src/domains/indexer/daemon.js",
+    "ingest:once": "node src/domains/indexer/daemon.js --once",
+    "demo": "node src/apps/demo-cli/cli.js",
+    "ingest:status": "node src/apps/demo-cli/status-cli.js",
+    "wallet-inspector": "node subapps/wallet-inspector/backend/server.js",
+    "kamino-monitor": "node subapps/kamino-monitor/server.js",
+    "wallet-inspector:cli": "node subapps/wallet-inspector/cli.js",
+    "fixture-lab": "node subapps/protocol-fixture-lab/server.js",
+    "fixture-lab:cli": "node subapps/protocol-fixture-lab/cli.js",
+    "test": "node --test",
+    "check": "node --check src/domains/editions/policy.js && node --check src/domains/indexer/source.js && node --check src/domains/indexer/inspect.js && node --check src/domains/indexer/process.js && node --check src/domains/indexer/runner.js && node --check src/domains/indexer/status-store.js && node --check src/domains/indexer/runtime.js && node --check src/domains/indexer/daemon-policy.js && node --check src/domains/indexer/daemon.js && node --check src/domains/operations/status.js && node --check src/domains/operations/observations.js && node --check src/platform/storage/consumer-store.js && node --check src/platform/storage/retention.js && node --check src/platform/storage/disk-governor.js && node --check src/apps/demo-cli/run.js && node --check src/apps/demo-cli/cli.js && node --check src/apps/demo-cli/ingestion-status.js && node --check src/apps/demo-cli/status-cli.js && node --check src/platform/http/app.js && node --check src/platform/http/config.js && node --check src/platform/http/server.js && node --check subapps/wallet-inspector/backend/app.js && node --check subapps/wallet-inspector/backend/runtime.js && node --check subapps/wallet-inspector/backend/server.js && node --check subapps/wallet-inspector/cli.js && node --check subapps/wallet-inspector/web/app.js && node --check subapps/protocol-fixture-lab/state.js && node --check subapps/protocol-fixture-lab/server.js && node --check subapps/protocol-fixture-lab/cli.js && node --check subapps/protocol-fixture-lab/web/app.js && node --check subapps/kamino-monitor/server.js && node --check subapps/kamino-monitor/runtime-config.js && node --check subapps/kamino-monitor/web/animal-identicon.js && node --check subapps/kamino-monitor/web/app.js"
+  },
+  "engines": {
+    "node": ">=22.5 <23"
+  },
+  "dependencies": {
+    "@solana/spl-token": "^0.4.15",
+    "@solana/web3.js": "^1.98.4",
+    "tweetnacl": "^1.0.3"
+  }
+}

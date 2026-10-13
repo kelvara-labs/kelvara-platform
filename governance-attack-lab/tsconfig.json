@@ -1,0 +1,1 @@
+{"compilerOptions":{"target":"ES2022","module":"NodeNext","moduleResolution":"NodeNext","strict":true,"esModuleInterop":true,"types":["node","vitest/globals"],"outDir":"dist","skipLibCheck":true},"include":["src/**/*.ts","tests/**/*.ts"]}

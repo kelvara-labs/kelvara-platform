@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS velocity_transactions (
+ transaction_id TEXT PRIMARY KEY CHECK(length(transaction_id) BETWEEN 1 AND 128), network TEXT NOT NULL, program_id TEXT NOT NULL, signature TEXT NOT NULL, slot INTEGER NOT NULL CHECK(slot >= 0), block_time TEXT, status TEXT NOT NULL CHECK(status IN ('finalized','failed')), error_json TEXT, account_keys_json TEXT NOT NULL CHECK(json_valid(account_keys_json)), instructions_json TEXT NOT NULL CHECK(json_valid(instructions_json)), token_deltas_json TEXT NOT NULL CHECK(json_valid(token_deltas_json)), decoder_provenance_json TEXT NOT NULL CHECK(json_valid(decoder_provenance_json)), payload_json TEXT NOT NULL CHECK(json_valid(payload_json)), payload_digest TEXT NOT NULL CHECK(length(payload_digest)=64), UNIQUE(network, signature)
+);
+CREATE INDEX IF NOT EXISTS velocity_transactions_slot ON velocity_transactions(slot DESC, transaction_id DESC);
+CREATE TRIGGER IF NOT EXISTS velocity_transactions_no_update BEFORE UPDATE ON velocity_transactions BEGIN SELECT RAISE(ABORT,'append_only_velocity_transaction'); END;
+CREATE TRIGGER IF NOT EXISTS velocity_transactions_no_delete BEFORE DELETE ON velocity_transactions BEGIN SELECT RAISE(ABORT,'append_only_velocity_transaction'); END;

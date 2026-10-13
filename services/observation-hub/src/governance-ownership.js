@@ -1,0 +1,9 @@
+export function createGovernanceReadOwnership({db,scopes,subjectBindings=new Map(),now=()=>new Date(),staleAfterMs=120000}={}){
+ if(!db||!(scopes instanceof Map)||!(subjectBindings instanceof Map))throw new TypeError('governance ownership dependencies required');
+ if(!Number.isSafeInteger(staleAfterMs)||staleAfterMs<1)throw new TypeError('staleAfterMs invalid');
+ function target(subjectAddress,network){const targetId=subjectBindings.get(`${network}:${subjectAddress}`);if(!targetId)return null;return db.prepare("SELECT d.target_id FROM desired_targets d WHERE d.target_id=? AND d.network=? AND d.status NOT IN ('draft','retired','paused')").get(targetId,network)}
+ return{
+  authorize({producer,walletId,subjectAddress,network}){const t=target(subjectAddress,network);return Boolean(t&&scopes.get(producer)?.wallets?.get(walletId)?.has(t.target_id))},
+  availability({subjectAddress,network}){const t=target(subjectAddress,network);if(!t)return{availability:'not_monitored',checkedAt:now().toISOString()};const row=db.prepare(`SELECT i.status,i.last_heartbeat_at,r.status reconciliation_status FROM target_assignments a JOIN indexers i ON i.id=a.indexer_id LEFT JOIN reconciliation_latest r ON r.indexer_id=a.indexer_id AND r.target_id=a.target_id WHERE a.target_id=? AND a.network=? ORDER BY a.created_at DESC LIMIT 1`).get(t.target_id,network);if(!row)return{availability:'not_monitored',checkedAt:now().toISOString()};const age=now().valueOf()-Date.parse(row.last_heartbeat_at);if(row.status!=='healthy'||!['observing','accepted'].includes(row.reconciliation_status))return{availability:'unavailable',checkedAt:now().toISOString(),reason:'indexer_unavailable'};return{availability:age>staleAfterMs?'stale':'healthy',checkedAt:now().toISOString(),...(age>staleAfterMs?{reason:'heartbeat_stale'}:{})}}
+ }
+}

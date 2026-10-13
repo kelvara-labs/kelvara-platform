@@ -1,0 +1,9 @@
+{
+  "name": "@kelvara/indexer-squads",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "start": "node src/main.js" },
+  "exports": { ".": "./src/index.js", "./v4": "./src/v4.js", "./registry": "./src/registry.js", "./client": "./src/client.js", "./config": "./src/config.js", "./assignments": "./src/assignments.js", "./production-assignment-runtime": "./src/production-assignment-runtime.js", "./main": "./src/main.js" },
+  "dependencies": { "@kelvara/contracts": "file:../contracts", "@sqds/multisig": "2.1.4" }
+}

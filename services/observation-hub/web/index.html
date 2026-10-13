@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090b12">
+  <title>Kelvara Control Plane</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#monitoring/overview" aria-label="Kelvara overview">
+    <span class="brand-mark"><i></i><i></i><i></i></span>
+    <span><strong>Kelvara</strong><small>Control plane</small></span>
+  </a>
+  <nav class="mode-nav" aria-label="Control plane mode">
+    <button id="monitoring-tab" class="mode active" type="button">Monitoring</button>
+    <button id="admin-tab" class="mode" type="button">Admin</button>
+  </nav>
+  <div class="top-actions"><span id="connection-state" class="connection"><i></i>Connecting</span><button id="refresh" class="quiet" type="button">Refresh</button></div>
+</header>
+<main>
+  <section id="monitoring-shell" class="workspace">
+    <aside class="rail">
+      <p>Command</p>
+      <button class="rail-link active" data-pane="overview" type="button">Overview</button>
+      <button class="rail-link" data-pane="incidents" type="button">Incidents <span id="incident-badge">0</span></button>
+      <p>Operations</p>
+      <button class="rail-link" data-pane="indexers" type="button">Indexers</button>
+      <button class="rail-link" data-pane="targets" type="button">Protocol targets</button>
+      <button class="rail-link" data-pane="evidence" type="button">Evidence</button>
+      <p>Customers</p>
+      <button class="rail-link" data-pane="clients" type="button">Clients</button>
+    </aside>
+    <div class="stage">
+      <section class="pane" data-view="overview">
+        <header class="page-head"><div><p class="eyebrow">COMMAND VIEW</p><h1>Operational overview</h1><p>System-wide signals. Protocol detail stays in focused panes.</p></div><span class="readonly">Read only</span></header>
+        <div class="kpi-grid">
+          <article><span>Control plane</span><strong id="system-state">Connecting</strong><small id="system-detail">Awaiting backend</small></article>
+          <article><span>Healthy indexers</span><strong id="healthy-indexers">Unknown</strong><small id="indexer-detail">No worker evidence</small></article>
+          <article><span>Enabled targets</span><strong id="enabled-targets">Unknown</strong><small id="target-detail">No target evidence</small></article>
+          <article><span>Stored snapshots</span><strong id="snapshot-count">Unknown</strong><small id="latest-evidence">No evidence yet</small></article>
+          <article><span>Evacuation events</span><strong id="evacuation-count">Unknown</strong><small id="evacuation-detail">No evacuation evidence yet</small></article>
+        </div>
+        <section class="panel priority-panel"><div><p class="eyebrow">TRIAGE</p><h2>Attention queue</h2></div><div id="attention-list" class="attention-list"><p class="empty">Loading operational evidence…</p></div></section>
+      </section>
+      <section class="pane hidden" data-view="indexers">
+        <header class="page-head"><div><p class="eyebrow">OPERATIONS</p><h1>Protocol indexers</h1><p>Worker heartbeat, cursor, target coverage, and failures.</p></div></header>
+        <div id="indexer-grid" class="entity-grid"><p class="empty">No indexers registered.</p></div>
+      </section>
+      <section class="pane hidden" data-view="targets">
+        <header class="page-head"><div><p class="eyebrow">OPERATIONS</p><h1>Protocol targets</h1><p>Backend-owned target metadata and latest chain evidence.</p></div></header>
+        <section class="panel table-panel"><div class="table-head"><span>Target</span><span>Indexer</span><span>Snapshot</span><span>State</span></div><div id="target-list"><p class="empty">No targets registered.</p></div></section>
+      </section>
+      <section class="pane hidden" data-view="evidence">
+        <header class="page-head"><div><p class="eyebrow">EVIDENCE</p><h1>Evidence continuity</h1><p>Snapshot recency and acknowledged cursor position remain distinct from transaction-history completeness.</p></div></header>
+        <section class="panel"><div id="evidence-list" class="evidence-list"><p class="empty">No snapshot evidence stored.</p></div></section>
+        <section class="panel"><div><p class="eyebrow">EVACUATION EVIDENCE</p><h2>Wallet evacuation status</h2></div><div id="evacuation-list" class="evidence-list"><p class="empty">No evacuation evidence stored.</p></div></section>
+      </section>
+      <section class="pane hidden" data-view="incidents">
+        <header class="page-head"><div><p class="eyebrow">COMMAND</p><h1>Incidents</h1><p>Persisted exceptions only. Unknown data never appears healthy.</p></div></header>
+        <section class="panel"><div id="incident-list"><p class="empty">Incident persistence not implemented yet.</p></div></section>
+      </section>
+      <section class="pane hidden" data-view="clients">
+        <header class="page-head"><div><p class="eyebrow">CUSTOMERS</p><h1>Clients</h1><p>Only SQL-enrolled paying users belong here. Inspected public wallets never count.</p></div></header>
+        <section class="panel"><p class="empty">Client enrollment tables are not connected to Kelvara V2 yet.</p></section>
+      </section>
+    </div>
+  </section>
+  <section id="admin-shell" class="workspace admin hidden">
+    <div class="stage full">
+      <header class="page-head"><div><p class="eyebrow">ADMINISTRATION</p><h1>Controlled changes</h1><p>HAOS Options remain the authority for tokens, RPC providers, targets, and backfill limits.</p></div></header>
+      <section class="panel admin-boundary"><span class="lock-mark">HA</span><div><h2>Configuration lives in Home Assistant</h2><p>This console exposes no mutation controls. Open each add-on’s Configuration tab to change worker tokens, RPC URLs, polling intervals, or the seven-day backfill boundary.</p></div></section>
+    </div>
+  </section>
+  <footer><span>Last refresh <strong id="last-refresh">Never</strong></span><span>Refresh interval 15 seconds</span><span>Backend-owned SQL evidence</span></footer>
+</main>
+<script type="module" src="./app.js"></script>
+</body>
+</html>

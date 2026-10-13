@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Continuous wallet control-path verification loop">
+<defs>
+ <pattern id="grid" width="64" height="64" patternUnits="userSpaceOnUse"><path d="M64 0H0V64" fill="none" stroke="#151814" stroke-opacity=".035"/></pattern>
+ <filter id="glow"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+ <filter id="soft"><feGaussianBlur stdDeviation="14"/></filter>
+</defs>
+<style>
+ .scaffold{fill:none;stroke:#151814;stroke-opacity:.22;stroke-width:1.4;stroke-dasharray:5 11}.node{opacity:.38;transition:opacity .45s ease}.node circle{fill:#fbfbf8;stroke:#151814;stroke-width:1.4}.node text{font-family:Arial,sans-serif;text-anchor:middle;fill:#151814}.node .title{font-size:15px;font-weight:700}.node .meta{font:10px monospace;opacity:.65}.active{opacity:.92}.active circle{stroke:#226b45;stroke-width:2}.active .halo{opacity:.6}.halo{fill:none;stroke:#d5fb42;stroke-width:9;opacity:0;transition:opacity .45s}.tracer{fill:#d5fb42;stroke:#151814;stroke-width:1.5;filter:url(#glow)}.trail{fill:none;stroke:#226b45;stroke-opacity:.36;stroke-width:2;stroke-dasharray:7 12;animation:flow 10s linear infinite}.radar{fill:none;stroke:#226b45;stroke-width:2;opacity:0;transform-origin:center}.state-monitor #oracle .radar,.state-monitor #wallet .radar{animation:radar 2.5s ease-out infinite}.state-monitor #oracle .radar.r2,.state-monitor #wallet .radar.r2{animation-delay:1.25s}.chip{opacity:0;transform-box:fill-box;transform-origin:center}.chip rect{fill:#fff8df;stroke:#a25b12}.chip text{font:700 11px Arial,sans-serif;fill:#8c4e0d}.trigger #protocol{opacity:.9}.trigger #protocol circle{fill:#fff4df;stroke:#a25b12;animation:catchFlash 1.8s ease-out}.trigger .chip{animation:chip 2.6s ease both}.verified .chip rect{fill:#eff8f1;stroke:#226b45}.verified .chip text{fill:#226b45}@keyframes flow{to{stroke-dashoffset:-190}}@keyframes radar{0%{r:48;opacity:.48}100%{r:108;opacity:0}}@keyframes catchFlash{0%,100%{filter:none}30%{filter:drop-shadow(0 0 12px #d98721)}}@keyframes chip{0%,100%{opacity:0;transform:translateY(5px) scale(.92)}15%,78%{opacity:1;transform:none}}
+ @media(prefers-reduced-motion:reduce){*{animation:none!important}.tracer{display:none}.node{transition:none}.radar{display:none}}
+</style>
+<rect width="1600" height="900" fill="url(#grid)"/>
+<!-- Exact narrative loop: Wallet → Position → Protocol → Oracle → Wallet -->
+<path id="control-loop" class="scaffold" d="M505 585 C360 640 255 660 130 600 C300 480 520 435 820 455 C1010 470 1140 545 1280 640 C1050 735 760 720 505 585 Z"/>
+<path class="trail" d="M505 585 C360 640 255 660 130 600 C300 480 520 435 820 455 C1010 470 1140 545 1280 640 C1050 735 760 720 505 585 Z"/>
+<g id="wallet" class="node active"><circle class="halo" cx="505" cy="585" r="69"/><circle cx="505" cy="585" r="52"/><circle class="radar r1" cx="505" cy="585" r="48"/><circle class="radar r2" cx="505" cy="585" r="48"/><text class="title" x="505" y="581">Wallet</text><text class="meta" x="505" y="602">883A…Ss62</text></g>
+<g id="position" class="node"><circle class="halo" cx="130" cy="600" r="63"/><circle cx="130" cy="600" r="46"/><text class="title" x="130" y="596">Position</text><text class="meta" x="130" y="617">USDG vault</text></g>
+<g id="protocol" class="node"><circle class="halo" cx="820" cy="455" r="64"/><circle cx="820" cy="455" r="47"/><text class="title" x="820" y="451">Protocol</text><text class="meta" x="820" y="472">control program</text></g>
+<g id="oracle" class="node"><circle class="halo" cx="1280" cy="640" r="61"/><circle cx="1280" cy="640" r="44"/><circle class="radar r1" cx="1280" cy="640" r="43"/><circle class="radar r2" cx="1280" cy="640" r="43"/><text class="title" x="1280" y="645">Oracle</text></g>
+<g class="chip" transform="translate(866 382)"><rect width="124" height="34" rx="17"/><text x="62" y="22" text-anchor="middle">Checking control…</text></g>
+<g font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="#226b45" opacity=".58"><text x="300" y="640">01 · TRACE</text><text x="650" y="482">02 · RESOLVE</text><text x="1020" y="535">03 · VERIFY</text><text x="920" y="712">04 · WATCH</text></g><circle class="tracer" r="10"><animateMotion dur="7.5s" repeatCount="indefinite" rotate="auto"><mpath href="#control-loop"/></animateMotion></circle>
+<circle cx="820" cy="455" r="86" fill="#d5fb42" opacity=".055" filter="url(#soft)"/>
+</svg>

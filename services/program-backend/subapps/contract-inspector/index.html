@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kelvara Contract Inspector</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main>
+    <header>
+      <div><p class="eyebrow">KELVARA / SHARED CONTRACTS</p><h1>Contract Inspector</h1></div>
+      <div class="network" role="group" aria-label="Solana network">
+        <button data-cluster="mainnet-beta">Mainnet</button>
+        <button data-cluster="devnet">Devnet</button>
+      </div>
+    </header>
+
+    <section class="status">
+      <span id="dot"></span><strong id="cluster">Loading</strong>
+      <span id="rpc">Checking network profile…</span>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <p class="number">01</p><h2>Evidence</h2>
+        <p>Paste evidence JSON. Kelvara checks provenance, timestamps, freshness, confidence, coverage, and network.</p>
+        <textarea id="evidence" spellcheck="false"></textarea>
+        <button class="primary" data-validate="evidence">Validate evidence</button>
+        <pre id="evidence-result">Not checked</pre>
+      </section>
+
+      <section class="card">
+        <p class="number">02</p><h2>Event</h2>
+        <p>Paste event JSON. Kelvara checks mode, evidence links, uncertainty, action, and network safety.</p>
+        <textarea id="event" spellcheck="false"></textarea>
+        <button class="primary" data-validate="event">Validate event</button>
+        <pre id="event-result">Not checked</pre>
+      </section>
+    </div>
+
+    <footer>No wallet connection. No signing. RPC credentials stay hidden.</footer>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

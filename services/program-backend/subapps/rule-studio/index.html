@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kelvara Rule Studio</title><link rel="stylesheet" href="/styles.css"></head>
+<body><main>
+<header><div><p class="kicker">KELVARA / DETERMINISTIC RULES</p><h1>Rule Studio</h1><p class="intro">Define once. Test safely on paper. Evaluate the same rule against monitored devnet evidence.</p></div><div class="header-tools"><div class="network" role="group" aria-label="Paper network"><button data-paper-cluster="mainnet-beta">Mainnet</button><button class="active" data-paper-cluster="devnet">Devnet</button></div><span class="safety">NO SIGNING · NO CHAIN WRITES</span></div></header>
+<section class="rule panel"><div><p class="step">01 · DEFINE RULE</p><h2>Shared rule</h2><p class="muted">Used unchanged by both levels and the CLI.</p></div><form id="rule-form"><div class="row"><label>Rule name<input name="name" value="NAV ceiling"></label><label>Evidence field<input name="field" value="nav"></label></div><div class="row"><label>Operator<select name="operator"><option value="greater_than">Greater than</option><option value="less_than">Less than</option><option value="equals">Must equal</option><option value="percent_change_greater_than">% change greater than</option><option value="freshness_greater_than">Evidence age greater than</option><option value="source_disagreement">Source disagreement</option></select></label><label>Threshold<input name="threshold" value="1.05"></label></div><div class="row"><label>Review margin %<input name="near" type="number" value="5" min="0"></label><label>Recommended action<input name="action" value="Review valuation evidence before transacting."></label></div><div id="summary" class="summary"></div></form></section>
+
+<section class="level paper-level">
+<div class="level-head"><div><span class="level-number">LEVEL 1</span><h2>Paper</h2><p>Fixture evidence. Safe, repeatable simulation.</p></div><span class="mode paper">SIMULATED</span></div>
+<div class="level-grid"><section class="panel"><p class="step">02 · FIXTURE STATE</p><textarea id="paper-evidence" spellcheck="false"></textarea><button id="paper-run" class="primary">Run paper evaluation</button></section><section class="panel result-card" id="paper-result"><p class="step">03 · RESULT</p><div class="badge neutral">NOT RUN</div><h3>Awaiting fixture</h3><p class="reason">Result will show pass, review, breach, or unknown.</p><div class="facts"></div></section></div>
+</section>
+
+<section class="level devnet-level">
+<div class="level-head"><div><span class="level-number">LEVEL 2</span><h2>Devnet</h2><p>Real normalized program or account state from a monitoring backend.</p></div><span class="mode devnet">MONITORED DEVNET</span></div>
+<div class="trust">Required provenance: monitoring backend · devnet cluster · slot · observed time · fetched time · freshness. Missing or stale state never passes.</div>
+<div class="level-grid"><section class="panel"><p class="step">02 · MONITORED STATE</p><textarea id="devnet-evidence" spellcheck="false"></textarea><button id="devnet-run" class="primary dark">Evaluate monitored devnet state</button></section><section class="panel result-card" id="devnet-result"><p class="step">03 · RESULT</p><div class="badge neutral">NOT RUN</div><h3>Awaiting backend evidence</h3><p class="reason">Paste normalized monitoring output or publish it through the API/CLI.</p><div class="facts"></div></section></div>
+</section>
+
+<section class="automation panel"><div><p class="step">AI / CLI AUTOMATION</p><h2>Bulk runner</h2><p class="muted">Run thousands of rules in Paper, Devnet, or both. Published runs appear in their matching level.</p></div><code>node subapps/rule-studio/cli.js run-levels --paper paper.json --devnet devnet.json --summary-only --publish http://127.0.0.1:7622</code><div id="run-counts">No published batch runs.</div></section>
+<footer>Paper is simulated. Devnet is monitored evidence. Neither mode signs or submits transactions.</footer>
+</main><script type="module" src="/app.js"></script></body></html>

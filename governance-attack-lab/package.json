@@ -1,0 +1,24 @@
+{
+  "name": "kelvara-governance-attack-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "govlab": "tsx src/cli.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@solana/web3.js": "1.99.0",
+    "@sqds/multisig": "2.1.4",
+    "commander": "15.0.0",
+    "dotenv": "18.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.5",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}

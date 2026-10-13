@@ -1,0 +1,10 @@
+import { createHash } from 'node:crypto';
+
+const ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+const P = (1n << 255n) - 19n;
+const POW = (a, e) => { let r = 1n; for (; e; e >>= 1n, a = a * a % P) if (e & 1n) r = r * a % P; return r; };
+function decode58(value) { let n = 0n; for (const c of value) { const i = ALPHABET.indexOf(c); if (i < 0) throw new TypeError('invalid base58'); n = n * 58n + BigInt(i); } const out = []; while (n) { out.push(Number(n & 255n)); n >>= 8n; } for (const c of value) { if (c === '1') out.push(0); else break; } if (out.length !== 32) throw new TypeError('invalid Solana address'); return Buffer.from(out.reverse()); }
+function encode58(bytes) { let n = 0n; for (const byte of bytes) n = n * 256n + BigInt(byte); let out = ''; while (n) { out = ALPHABET[Number(n % 58n)] + out; n /= 58n; } for (const byte of bytes) { if (!byte) out = `1${out}`; else break; } return out; }
+function isOnCurve(bytes) { const y = BigInt(`0x${Buffer.from(bytes).reverse().toString('hex')}`) & ((1n << 255n) - 1n); if (y >= P) return false; const y2 = y * y % P, d = (P - 121665n) * POW(121666n, P - 2n) % P; const x2 = (y2 - 1n) * POW((d * y2 + 1n) % P, P - 2n) % P; let x = POW(x2, (P + 3n) / 8n); if (x * x % P !== x2) x = x * POW(2n, (P - 1n) / 4n) % P; return x * x % P === x2; }
+function pda(seeds, programId) { const program = decode58(programId); for (let bump = 255; bump >= 0; bump -= 1) { const hash = createHash('sha256').update(Buffer.concat([...seeds, Buffer.from([bump]), program, Buffer.from('ProgramDerivedAddress')])).digest(); if (!isOnCurve(hash)) return encode58(hash); } throw new Error('unable to derive PDA'); }
+export function deriveV4VaultPda({ programId, multisigAddress, authorityIndex, vaultIndex }) { const index = authorityIndex ?? vaultIndex; if (!Number.isInteger(index) || index < 0 || index > 255) throw new RangeError('authority index'); const indexBytes = Buffer.alloc(1); indexBytes.writeUInt8(index); return pda([Buffer.from('multisig'), decode58(multisigAddress), Buffer.from('vault'), indexBytes], programId); }

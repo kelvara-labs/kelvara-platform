@@ -1,0 +1,26 @@
+{
+  "name": "@kelvara/contracts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./evacuation-trigger-v1": "./src/evacuation-trigger-v1.js",
+    "./ingestion-contract": "./src/ingestion-contract.js",
+    "./target-contract": "./src/target-contract.js",
+    "./target-contract-v2": "./src/target-contract-v2.js",
+    "./wallet-discovery": "./src/wallet-discovery.js",
+    "./expected-safeguards": "./src/expected-safeguards.js",
+    "./operations-bridge": "./src/operations-bridge.js",
+    "./wallet-safeguard-policy": "./src/wallet-safeguard-policy.js",
+    "./wallet-safeguard-receipt": "./src/wallet-safeguard-receipt.js",
+    "./program-backend-projection": "./src/program-backend-projection.js",
+    "./portfolio-producer": "./src/portfolio-producer.js",
+    "./owner-authority-receipt": "./src/owner-authority-receipt.js",
+    "./governance-control-v1": "./src/governance-control-v1.js",
+    "./governance-action-v1": "./src/governance-action-v1.js",
+    "./control-map-v1": "./src/control-map-v1.js",
+    "./control-baseline-read-v1": "./src/control-baseline-read-v1.js",
+    "./governance-bindings-read-v1": "./src/governance-bindings-read-v1.js",
+    "./velocity-observation-v1": "./src/velocity-observation-v1.js"
+  }
+}

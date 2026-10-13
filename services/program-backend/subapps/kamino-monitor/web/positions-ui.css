@@ -1,0 +1,31 @@
+/* Positions IA: scoped panels, collision-safe cards, responsive containment. */
+#stage-position .intro{align-items:start}
+#stage-position .intro>p{padding-top:8px}
+.selected-position{min-width:0;overflow:hidden}
+.selected-position>header{gap:18px;align-items:start}
+.selected-position>header>div{min-width:0}
+.selected-position h2{overflow-wrap:anywhere}
+.protocol-pill{flex:0 1 auto;max-width:44%;min-width:0}
+.protocol-pill span{overflow-wrap:anywhere}
+.position-tabs{scrollbar-width:thin}
+.position-tabs button{flex:0 0 auto}
+[data-position-panel]{min-width:0}
+.position-panel{min-height:112px;padding:18px 0;border-bottom:1px solid var(--line)}
+.position-panel h3{margin:0 0 7px;font-size:15px}
+.position-panel p{margin:0 0 12px;color:var(--muted);font-size:12px;line-height:1.55}
+.position-panel strong{font-size:11px;color:var(--green)}
+.position-metrics b{overflow-wrap:anywhere}
+@media(max-width:760px){
+  .selected-position{padding:22px 18px}
+  .selected-position>header{display:grid;grid-template-columns:minmax(0,1fr) auto}
+  .protocol-pill{max-width:150px}
+  .position-tabs{margin-top:22px}
+}
+@media(max-width:420px){
+  .selected-position>header{display:block}
+  .protocol-pill{display:inline-flex;margin-top:12px;max-width:100%}
+  .position-row{grid-template-columns:30px minmax(0,1fr);gap:9px;padding:14px 12px}
+  .position-row .row-value{grid-column:2;text-align:left}
+  .position-row .row-state{grid-column:2;text-align:left}
+  .position-tabs button{padding:10px 9px;font-size:12px}
+}

@@ -1,0 +1,1 @@
+{"name":"kelvara-v3-runtime","private":true,"type":"module","workspaces":["control-center","observation-hub","contracts","solana-transport","indexer-kamino"]}

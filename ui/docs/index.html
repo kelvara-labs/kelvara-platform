@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kelvara Docs | Mainnet Monitoring and Evacuation</title>
+  <meta name="description" content="Current Kelvara documentation: Mainnet Kamino position discovery, control monitoring, user-signed evacuation, armed protection, security boundaries, and the separate Devnet proof journey.">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <link rel="canonical" href="https://kelvara.xyz/docs/">
+  <link rel="stylesheet" href="/assets/site.css?v=20260927-docs-current">
+  <script src="/assets/posthog.js"></script>
+  <link rel="icon" href="/assets/kelvara-icon.png?v=2" type="image/png">
+  <link rel="shortcut icon" href="/assets/kelvara-icon.png?v=2" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/kelvara-icon.png?v=2">
+  <meta name="theme-color" content="#183c2b">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Kelvara">
+  <meta property="og:title" content="Kelvara Docs | Mainnet Monitoring and Evacuation">
+  <meta property="og:description" content="How Kelvara monitors a live Kamino Mainnet position and provides bounded, non-custodial evacuation paths.">
+  <meta property="og:url" content="https://kelvara.xyz/docs/">
+  <meta property="og:image" content="https://kelvara.xyz/og-image.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kelvara Docs | Mainnet Monitoring and Evacuation">
+  <meta name="twitter:description" content="Current Mainnet capabilities, implementation, security boundaries, and Devnet proof journey.">
+  <meta name="twitter:image" content="https://kelvara.xyz/og-image.svg">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Kelvara Mainnet monitoring and evacuation","description":"Current implementation and security boundaries for Kelvara's Solana Mainnet protection application.","dateModified":"2026-09-27","url":"https://kelvara.xyz/docs/","publisher":{"@type":"Organization","name":"Kelvara","url":"https://kelvara.xyz/"}}</script>
+</head>
+<body>
+  <header class="site-header wrap">
+    <a class="brand" href="/" aria-label="Kelvara home"><img class="mark" src="/assets/kelvara-icon.png" alt="" width="36" height="36">Kelvara</a>
+    <nav class="nav" aria-label="Main navigation"><a href="/">Home</a><a href="/docs/" aria-current="page">Docs</a><a class="nav-launch" href="https://app.kelvara.xyz">Launch app</a></nav>
+  </header>
+
+  <div class="docs-shell wrap">
+    <aside class="toc">
+      <strong>Documentation</strong>
+      <nav aria-label="Documentation sections">
+        <a href="#overview">Overview</a>
+        <a href="#current-scope">Current scope</a>
+        <a href="#monitoring">Monitoring</a>
+        <a href="#evacuation">Evacuation</a>
+        <a href="#armed-protection">Armed protection</a>
+        <a href="#security">Security model</a>
+        <a href="#devnet">Devnet proof</a>
+        <a href="#limitations">Limitations</a>
+        <a href="#identities">Identities</a>
+        <a href="#sources">Sources</a>
+      </nav>
+    </aside>
+
+    <main class="docs">
+      <p class="eyebrow">Mainnet product documentation</p>
+      <h1>Monitor the trust.<br>Preserve the exit.</h1>
+      <p class="lead">Kelvara is a non-custodial risk-response layer for Solana DeFi. The current application operates on Mainnet for one exact Kamino Earn vault: it discovers a wallet's position, verifies critical control evidence, and prepares constrained withdrawal paths before an emergency.</p>
+
+      <div class="note status-note"><strong>Mainnet is live.</strong> Position inspection, control verification, 60-second in-app monitoring, immediate user-signed evacuation, and armed fast-close components operate against Solana Mainnet. The separate Devnet journey demonstrates an automated breach-to-evacuation sequence with simulated-value tokens.</div>
+
+      <section id="overview">
+        <h2>Why Kelvara exists</h2>
+        <p>Depositing into a protocol creates an ongoing dependency, not a one-time transaction. Program code can be upgraded. Privileged authorities can change. A vault can remain visible in a wallet while the assumptions under which the user deposited have changed.</p>
+        <p>Wallets and portfolio dashboards usually show balances and yield. Kelvara focuses on the control path behind the position and the user's ability to respond:</p>
+        <ol class="process-list">
+          <li><strong>Discover</strong><span>Resolve the wallet's exact supported position, vault shares, program, and underlying asset.</span></li>
+          <li><strong>Verify</strong><span>Read program and ProgramData accounts directly from Solana RPC instead of trusting a protocol status label.</span></li>
+          <li><strong>Interpret</strong><span>Compare current control state with explicit expected identities. Missing or invalid evidence fails closed.</span></li>
+          <li><strong>Respond</strong><span>Simulate and sign a narrowly constrained withdrawal, or prepare bounded durable-nonce exits in advance.</span></li>
+        </ol>
+        <p>Kelvara does not make the underlying protocol safe. It reduces detection and reaction time when a monitored condition changes and withdrawal is still possible.</p>
+      </section>
+
+      <section id="current-scope">
+        <h2>Current Mainnet scope</h2>
+        <p>The production application deliberately supports a narrow, verifiable slice rather than claiming broad protocol coverage.</p>
+        <table>
+          <thead><tr><th>Capability</th><th>Current implementation</th></tr></thead>
+          <tbody>
+            <tr><td>Network</td><td>Solana Mainnet</td></tr>
+            <tr><td>Integration</td><td>Kamino Earn — Steakhouse USDG High Yield</td></tr>
+            <tr><td>Position discovery</td><td>Exact vault-share position via Kamino's wallet-position and vault-metrics APIs</td></tr>
+            <tr><td>Independent evidence</td><td>kVault Program and ProgramData accounts decoded from Solana RPC</td></tr>
+            <tr><td>Control rules</td><td>Expected program deployment relationship and upgrade-authority baseline</td></tr>
+            <tr><td>Refresh</td><td>Every 60 seconds while monitoring is active in the open application</td></tr>
+            <tr><td>Response paths</td><td>Immediate wallet-approved evacuation and pre-signed armed fast close</td></tr>
+          </tbody>
+        </table>
+        <p><a class="button docs-button" href="https://app.kelvara.xyz">Open the Mainnet app</a></p>
+      </section>
+
+      <section id="monitoring">
+        <h2>How monitoring works</h2>
+        <h3>1. Position evidence</h3>
+        <p>Kelvara accepts either a public Solana address for read-only inspection or an explicitly connected Phantom, Solflare, or Backpack wallet. It selects only the supported Kamino vault and reports exact share data plus an estimated underlying USDG amount. A USDG token balance alone is not treated as a Kamino position. Positions at or below the exact 0.001 USDG discovery threshold are reported as dust.</p>
+
+        <h3>2. Control-plane evidence</h3>
+        <p>The backend fetches the configured kVault Program account, confirms its upgradeable-loader state, resolves its ProgramData account, and decodes the current upgrade authority. It compares those values with pinned expected identities.</p>
+
+        <h3>3. Interpretation</h3>
+        <p>A matching baseline means the specific monitored rule passes. An authority mismatch means upgrade control changed; it is a risk event requiring review, not proof that the protocol is compromised. Invalid account owners, malformed layouts, unexpected ProgramData relationships, unavailable data, and stale requests are not converted into a healthy result.</p>
+
+        <div class="note"><strong>Important distinction.</strong> Kelvara currently monitors explicit control assumptions. It does not claim to detect every exploit, malicious transaction, oracle failure, liquidity crisis, or protocol bug.</div>
+      </section>
+
+      <section id="evacuation">
+        <h2>Immediate evacuation</h2>
+        <p>A connected position owner can prepare a full redemption of the detected Kamino vault shares back to USDG in the same wallet. This is a user-confirmed Mainnet action:</p>
+        <ol>
+          <li>Kelvara requests an unsigned withdrawal transaction from Kamino.</li>
+          <li>The backend decompiles and validates the transaction before it reaches the wallet.</li>
+          <li>Allowed programs, signer count, destination wallet, destination token account, instruction order, exact share amount, and priority-fee cap are constrained.</li>
+          <li>The transaction is simulated and the expected destination, amount, and fee are shown.</li>
+          <li>The wallet signs client-side. Kelvara receives no private key or seed phrase.</li>
+          <li>The signed transaction is validated again, submitted once, and tracked by signature.</li>
+        </ol>
+        <p>If confirmation is uncertain, Kelvara tells the user to inspect the existing signature. It does not blindly resubmit a withdrawal that may already have landed.</p>
+      </section>
+
+      <section id="armed-protection">
+        <h2>Armed fast close</h2>
+        <p>Normal Solana transactions expire after their recent blockhash leaves the processing window. A durable nonce can keep a fully constructed transaction valid for later submission until that nonce is advanced.[1] Kelvara uses this primitive to preserve a specific withdrawal decision—not to obtain general wallet authority.</p>
+        <p>Arming protection currently performs the following Mainnet flow:</p>
+        <ol>
+          <li>The wallet authenticates with a one-time signed message.</li>
+          <li>The wallet creates three user-controlled durable nonce accounts.</li>
+          <li>Kelvara prepares three exact-share withdrawal variants with independent nonces and low, medium, and high priority-fee caps.</li>
+          <li>The backend validates each variant; the wallet batch-signs the exact transactions client-side.</li>
+          <li>The signed bundle is validated again and stored encrypted with AES-256-GCM, scoped to the authenticated wallet.</li>
+          <li>Fast close checks the current position, reconciles prior signatures, and submits the cheapest still-valid tier first.</li>
+        </ol>
+        <p>Each transaction is limited to the approved position, approved instruction sequence, approved programs, and the owner's destination. Advancing or reclaiming the nonce accounts revokes the unused authorizations and returns their rent to the owner.</p>
+        <div class="note"><strong>Current automation boundary.</strong> Armed protection is operational on Mainnet, but Mainnet fast close is currently initiated by the user. The autonomous detection-to-submission sequence is demonstrated separately on Devnet.</div>
+      </section>
+
+      <section id="security">
+        <h2>Security model</h2>
+        <ul>
+          <li><strong>No wallet-key custody.</strong> Connection, authentication, nonce setup, evacuation, arming, revocation, and reclaim signatures happen in the browser wallet.</li>
+          <li><strong>Bounded authorization.</strong> An armed transaction can redeem the approved shares to the approved owner destination. It cannot sign arbitrary transactions or transfer protocol administration.</li>
+          <li><strong>Independent validation.</strong> Prepared and signed transactions are decoded and checked against exact accounts, instruction order, programs, amounts, signer count, nonce authority, and fee limits.</li>
+          <li><strong>Wallet-scoped access.</strong> Protection records require a short-lived session obtained through a one-time wallet-signature challenge.</li>
+          <li><strong>Encrypted storage.</strong> Armed bundles are encrypted at rest using AES-256-GCM.</li>
+          <li><strong>Fail-closed evidence.</strong> Missing, malformed, unexpected, or unavailable evidence is an error or unknown state—not a pass.</li>
+          <li><strong>Replay control.</strong> A successful durable-nonce transaction advances its nonce. Unused variants require explicit revocation after one tier succeeds.</li>
+        </ul>
+
+        <h3>Program upgrades require special treatment</h3>
+        <p>Solana's upgradeable loader can replace a program's executable code while preserving its program address.[2] Therefore, a transaction validated under old program semantics must not be assumed safe after arbitrary bytecode changes. Authority changes may create a review or response window; confirmed code changes require quarantine and renewed validation.</p>
+      </section>
+
+      <section id="devnet">
+        <h2>Separate Devnet proof journey</h2>
+        <p>The Devnet demo is not the production network and not a substitute for the Mainnet application. It exists to make the full protection thesis independently observable without putting real value at risk.</p>
+        <p>The guided journey uses a disposable browser wallet and simulated-value sandbox USDC. It performs real Devnet transactions: fund wallet, deposit into Saturn Earn, discover the position, create a durable nonce, sign a bounded evacuation, trigger a controlled authority breach, submit the pre-signed evacuation, and verify the returned token balance and transaction fingerprints.</p>
+        <p><a class="button secondary docs-button" href="/">Open Kelvara</a></p>
+      </section>
+
+      <section id="limitations">
+        <h2>Limitations and operational status</h2>
+        <ul>
+          <li>Current production coverage is one exact Kamino Earn vault, not all Kamino positions or all Solana protocols.</li>
+          <li>The active Mainnet rules cover the configured deployment relationship and upgrade authority. Broader admin, oracle, liquidity, pause, and withdrawal-health signals remain future coverage unless explicitly shown in the app.</li>
+          <li>Successful evacuation depends on the underlying protocol and Solana network still accepting the constrained withdrawal.</li>
+          <li>Monitoring cannot guarantee advance warning. A harmful change and loss can occur before a poll or before a valid exit can land.</li>
+          <li>Authority continuity does not prove that program code, dependencies, economic assumptions, or governance are safe.</li>
+          <li>Displayed underlying value depends on Kamino's position and metrics APIs; control evidence comes independently from Solana RPC.</li>
+          <li>Kelvara is experimental software, not insurance, an audit, investment advice, or a guarantee against loss.</li>
+          <li>Public API contracts, broad protocol coverage, pricing, and service-level objectives have not been announced.</li>
+        </ul>
+      </section>
+
+      <section id="identities">
+        <h2>Fixed Mainnet identities</h2>
+        <table class="identity-table">
+          <tbody>
+            <tr><th>Vault</th><td><code>BoZDRc1RDY9FzUZZ19WT4GbtTnnbXQ8AGSU5ByEw3ut5</code></td></tr>
+            <tr><th>Share mint</th><td><code>4hKmkq2SkthLPceEBJXpyvH9m9PvNpFwasoB8mZgJ6rE</code></td></tr>
+            <tr><th>USDG mint</th><td><code>2u1tszSeqZ3qBWF3uNGPFc8TzMk2tdiwknnRMWGWjGWH</code></td></tr>
+            <tr><th>kVault program</th><td><code>KvauGMspG5k6rtzrqqn7WNn3oZdyKqLKwK2XWQ8FLjd</code></td></tr>
+            <tr><th>ProgramData</th><td><code>GeZ7nkkcbJ6VVV1XVFbmFnLCY3F1LPBGk6cufDZvrbGn</code></td></tr>
+          </tbody>
+        </table>
+        <p>The live backend exposes its active network and configured integration at <a href="https://api.kelvara.xyz/api/config"><code>api.kelvara.xyz/api/config</code></a>.</p>
+      </section>
+
+      <section id="sources">
+        <h2>Sources</h2>
+        <ol class="sources-list">
+          <li><a href="https://solana.com/docs/core/transactions/durable-nonces">Solana documentation — Durable Nonces</a></li>
+          <li><a href="https://solana.com/docs/core/programs/program-deployment">Solana documentation — Program Deployment</a></li>
+        </ol>
+        <p>Implementation-specific statements describe the currently deployed Kelvara code and live service configuration.</p>
+      </section>
+
+      <section id="contact">
+        <h2>Contact</h2>
+        <p><a href="mailto:help@kelvara.xyz">help@kelvara.xyz</a><br><a href="mailto:contact@kelvara.xyz">contact@kelvara.xyz</a></p>
+        <p>Last updated: <time datetime="2026-09-27">27 September 2026</time>.</p>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer wrap"><span>Kelvara · © <span data-current-year></span></span></footer>
+  <script>document.querySelectorAll('[data-current-year]').forEach((element) => { element.textContent = new Date().getFullYear(); });</script>
+</body>
+</html>

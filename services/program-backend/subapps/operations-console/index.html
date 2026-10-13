@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111810">
+  <title>Kelvara operations · monitoring control plane</title>
+  <link rel="stylesheet" href="/operations/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="brand-mark">K</span><div><strong>Kelvara operations</strong><small>Monitoring control plane</small></div></div>
+  <nav class="primary-nav" aria-label="Primary navigation"><button id="monitoring-tab" class="workspace-tab active" type="button" aria-selected="true">Monitoring</button><button id="admin-tab" class="workspace-tab" type="button" aria-selected="false">Admin</button></nav>
+  <div class="top-actions"><span id="connection-state" class="status unknown"><i></i>Connecting</span><button id="refresh" type="button">Refresh</button></div>
+</header>
+<main>
+  <div id="monitoring-shell" class="workspace-shell">
+    <section class="hero compact-hero">
+      <div><p class="eyebrow">READ-ONLY OPERATIONS</p><h1>Know what needs attention now.</h1><p class="lede">Start with system-wide signals. Open a focused pane only when a signal needs investigation.</p></div>
+    </section>
+    <div class="operations-layout">
+      <aside class="side-rail">
+        <nav aria-label="Monitoring sections">
+          <p>Command</p><button class="side-link active" data-pane="overview" type="button">Overview</button><button class="side-link" data-pane="incidents" type="button">Incidents</button>
+          <p>Operations</p><button class="side-link" data-pane="indexers" type="button">Indexers</button><button class="side-link" data-pane="providers" type="button">Providers</button><button class="side-link" data-pane="targets" type="button">Protocol targets</button>
+          <p>Customers</p><button class="side-link" data-pane="clients" type="button">Clients</button>
+          <p>Evidence</p><button class="side-link" data-pane="continuity" type="button">Continuity</button><button class="side-link" data-pane="storage" type="button">Storage</button>
+        </nav>
+      </aside>
+      <div class="pane-stage">
+        <section class="deep-view" data-view="overview">
+          <header class="view-header"><div><p class="eyebrow">COMMAND VIEW</p><h2>Operational overview</h2></div><span class="chip">Read only</span></header>
+          <section class="summary-strip" aria-label="Current operating state">
+            <article><span>Invariant monitoring</span><strong id="service-state">Unknown</strong><small id="service-stage">No cycle data</small></article>
+            <article><span>Control-plane uptime</span><strong id="service-uptime">Unknown</strong><small>Current API process</small></article>
+            <article><span>Provider observations</span><strong id="provider-state">Unknown</strong><small id="provider-count">No provider samples</small></article>
+            <article><span>Open incidents</span><strong id="incident-count">0</strong><small>Persisted operational exceptions</small></article>
+          </section>
+          <div id="notice" class="notice" role="status">Unknown means not measured. It never means zero or healthy.</div>
+          <section class="panel overview-guide"><header><div><p class="eyebrow">TRIAGE ORDER</p><h2>Fast admin check</h2></div></header><ol><li>Confirm invariant monitoring is active.</li><li>Review open incidents.</li><li>Check provider observations.</li><li>Open protocol or customer evidence only when needed.</li></ol></section>
+        </section>
+
+        <section class="deep-view hidden" data-view="incidents"><header class="view-header"><div><p class="eyebrow">COMMAND</p><h2>Operational incidents</h2></div></header><section class="panel"><div id="incident-list" class="incident-list"><p class="empty">No incidents returned.</p></div></section></section>
+
+        <section class="deep-view hidden" data-view="indexers"><header class="view-header"><div><p class="eyebrow">OPERATIONS</p><h2>Protocol indexers</h2></div></header><section class="panel" id="protocol-indexers"><header><div><h2>Protocol-specific ingestion</h2><p class="footnote">Freshness belongs to each named indexer. It is not a system-wide KPI.</p></div><span id="source-access" class="chip">Unknown access</span></header><div class="metric-grid compact"><article><span>ONRE freshness</span><strong id="source-freshness">Unknown</strong></article><article><span>Indexed head</span><strong id="source-head">No indexed head</strong></article></div><div id="indexer-list" class="indexer-list"><p class="empty">No protocol indexers returned.</p></div><details class="indexer-detail"><summary>ONRE Mainnet indexer details</summary><div class="metric-grid"><article><span>ONRE signatures</span><strong id="source-signatures">Unknown</strong></article><article><span>Processed</span><strong id="source-processed">Unknown</strong></article><article><span>Pending backlog</span><strong id="source-pending">Unknown</strong></article><article><span>Failed</span><strong id="source-failed">Unknown</strong></article><article><span>Instructions</span><strong id="source-instructions">Unknown</strong></article><article><span>Accounts</span><strong id="source-accounts">Unknown</strong></article><article><span>Source lag</span><strong id="source-lag">Unknown</strong></article><article><span>Processing lag</span><strong id="processing-lag">Unknown</strong></article></div><div class="detail-row"><span>Schema</span><strong id="source-schema">Unknown</strong></div></details></section></section>
+
+        <section class="deep-view hidden" data-view="providers"><header class="view-header"><div><p class="eyebrow">OPERATIONS</p><h2>Provider health</h2></div></header><section class="panel"><div id="provider-list" class="provider-list"><span class="chip">Provider unknown</span></div><div class="metric-grid compact"><article><span>Average latency</span><strong id="provider-latency">Unknown</strong></article><article><span>Observed success</span><strong id="provider-success">Unknown</strong></article><article><span>Recent samples</span><strong id="provider-samples">Unknown</strong></article><article><span>Indexer backlog</span><strong id="operations-backlog">Unknown</strong></article></div><p class="footnote">Provider identity comes from configured RPC endpoints. Unknown remains explicit.</p></section></section>
+
+        <section class="deep-view hidden" data-view="targets"><header class="view-header"><div><p class="eyebrow">OPERATIONS</p><h2>Shared protocol targets</h2></div></header><section class="panel"><div class="metric-grid compact coverage"><article><span>Unique targets</span><strong id="coverage-targets">Unknown</strong></article><article><span>Distinct wallets</span><strong id="coverage-positions">Unknown</strong></article><article><span>Wallet-target links</span><strong id="coverage-links">Unknown</strong></article></div><div class="data-table" role="region" aria-label="Watch targets"><div class="table-head"><span>Target</span><span>Protocol</span><span>Linked wallets</span></div><div id="target-table-body" class="table-body"><p class="empty">No target records returned.</p></div></div></section></section>
+
+        <section class="deep-view hidden" data-view="clients"><header class="view-header"><div><p class="eyebrow">CUSTOMERS</p><h2>Clients</h2></div></header><section class="panel clients-panel"><header><div><h2>Enrolled protection customers</h2><p class="footnote">SQL-backed enrollment begins only after signed protection activation. Public-address inspections never create clients.</p></div></header><div class="wallet-layout"><div class="data-table" role="region" aria-label="Enrolled clients"><div class="table-head client-head"><span>Client wallet</span><span>Last activity</span><span>Paid amount</span><span>Evacuations</span></div><div id="client-table-body" class="table-body"><p class="empty">No enrolled clients returned.</p></div></div><aside id="client-detail" class="wallet-detail"><p class="empty">Select a client to inspect SQL-backed activity, payments, and signed evacuation transactions.</p></aside></div></section><section class="panel"><header><div><p class="eyebrow">TRANSACTION READINESS</p><h2>Signed evacuation transactions</h2></div></header><p class="footnote">Signatures, status, and timestamps only. Signed transaction bytes remain outside this operations database.</p><div id="client-evacuations" class="incident-list"><p class="empty">Select a client.</p></div></section><section class="panel"><header><div><p class="eyebrow">PAYMENTS</p><h2>Paid amounts from SQL records</h2></div></header><div id="client-payments" class="incident-list"><p class="empty">Select a client.</p></div></section></section>
+
+        <section class="deep-view hidden" data-view="continuity"><header class="view-header"><div><p class="eyebrow">EVIDENCE</p><h2>Monitoring continuity</h2></div><div class="legend"><span class="healthy">Observed</span><span class="adverse">Undesired</span><span class="gap">Gap</span></div></header><section class="panel"><div id="continuity-chart" class="continuity-chart" aria-label="Hourly monitoring continuity"></div><p class="footnote">Each bar is one hour. Green: observations succeeded. Red: failure or disagreement observed. Gray: no observation.</p></section></section>
+
+        <section class="deep-view hidden" data-view="storage"><header class="view-header"><div><p class="eyebrow">EVIDENCE</p><h2>Storage and retention</h2></div><span class="chip">Read only</span></header><section class="panel"><div class="metric-grid compact"><article><span>Database size</span><strong id="storage-db-size">Unknown</strong></article><article><span>Quota remaining</span><strong id="storage-free">Unknown</strong></article><article><span>Retention</span><strong id="retention-state">Unknown</strong></article><article><span>Compaction lag</span><strong id="compaction-lag">Unknown</strong></article><article><span>Quota state</span><strong id="storage-action">Unknown</strong></article><article><span>Quota usage</span><strong id="storage-used">Utilization not measured</strong></article></div><div class="pressure-scale"><span>Normal &lt;70%</span><span>Warn 70%</span><span>Compact 80%</span><span>Prune 85%</span></div></section></section>
+      </div>
+    </div>
+  </div>
+
+  <div id="admin-shell" class="workspace-shell hidden">
+    <section class="hero compact-hero"><div><p class="eyebrow">ADMINISTRATION</p><h1>Controlled changes.</h1><p class="lede">Authentication and mutable settings live here. Monitoring views remain read-only.</p></div><aside class="access-card"><label for="operations-token">Admin token <span>optional on loopback</span></label><div class="token-row"><input id="operations-token" type="password" autocomplete="off" placeholder="Held in memory only"><button id="apply-token" type="button">Apply</button></div><p>Never persisted. Required when the API uses <code>KELVARA_OPERATIONS_TOKEN</code>.</p></aside></section>
+    <section class="panel admin-panel"><header><div><p class="eyebrow">EVIDENCE POLICY</p><h2>Storage quota</h2></div><span class="chip">Changes configuration</span></header><div class="setting-row"><label for="quota-gb">Maximum evidence storage</label><div><input id="quota-gb" type="number" min="1" max="10000" step="1"><span>GB</span><button id="save-quota" type="button">Save quota</button></div><small id="quota-message">Persistent setting; no redeploy required.</small></div></section>
+  </div>
+
+  <footer><span>Last refresh: <strong id="last-refresh">Never</strong></span><span>Automatic refresh: 15 seconds</span><span>Monitoring is read-only.</span></footer>
+</main>
+<script type="module" src="/operations/app.js"></script>
+</body>
+</html>

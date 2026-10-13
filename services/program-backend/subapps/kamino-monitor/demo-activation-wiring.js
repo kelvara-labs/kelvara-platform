@@ -1,0 +1,3 @@
+import { createDemoSessionRuntime } from "./demo-session-runtime.js";
+import { createDemoActivationService } from "./demo-activation.js";
+export async function createProgramBackendDemoActivation({env=process.env,runtimeDir,createSessionRuntime=createDemoSessionRuntime,createService=createDemoActivationService}={}){const chain=await createSessionRuntime({env,runtimeDir});if(!chain)return null;const activation=createService({chain,programId:env.DEVNET_SCENARIO_PROGRAM_ID,mint:env.DEVNET_FUN_USD_MINT});return{...activation,triggerIncident:input=>chain.triggerAuthorityIncident(input),resetIncident:input=>chain.resetAuthorityIncident(input),prepareEvacuation:input=>chain.prepareEvacuation({...input,programId:env.DEVNET_SCENARIO_PROGRAM_ID,mint:env.DEVNET_FUN_USD_MINT})}}

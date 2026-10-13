@@ -1,0 +1,10 @@
+{
+  "name": "@kelvara/solana-transport",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.js",
+  "dependencies": {
+    "@triton-one/yellowstone-grpc": "9.0.0"
+  }
+}

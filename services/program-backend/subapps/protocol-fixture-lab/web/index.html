@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Protocol Fixture Lab</title><link rel="stylesheet" href="/styles.css"></head>
+<body><main>
+<header><strong>Kelvara</strong><span>Devnet-fixture · fixture simulation only</span></header>
+<h1>Protocol Fixture Lab</h1>
+<p>Controllable protocol-monitoring surface. Not chain data or a protocol deployment.</p>
+<nav><a href="http://127.0.0.1:7620">Wallet Inspector</a><a href="http://127.0.0.1:7623">Alert Console</a></nav>
+<section class="controls"><button id="reset">Reset baseline</button><button id="export" class="secondary">Export JSON</button></section>
+<section><h2>Scenarios</h2><div id="scenarios" class="grid"></div></section>
+<section><h2>Current state</h2><dl id="state"></dl></section>
+<section><h2>Indexer RPC</h2><code id="rpc"></code></section>
+<section><div class="section-head"><h2>RPC activity</h2><button id="refresh" class="secondary">Refresh</button></div><div class="table-wrap"><table><thead><tr><th>#</th><th>Time</th><th>Method</th><th>Status</th></tr></thead><tbody id="rpc-activity"></tbody></table></div></section>
+<section><h2>Fixture transactions</h2><div class="table-wrap"><table><thead><tr><th>Slot</th><th>Scenario</th><th>Signature</th><th>Status</th></tr></thead><tbody id="transactions"></tbody></table></div></section>
+<p id="status" role="status"></p>
+</main><script type="module" src="/app.js"></script></body></html>
