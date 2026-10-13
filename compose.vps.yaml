@@ -1,7 +1,7 @@
 services:
   program-backend:
-    # Base Compose keeps this loopback-only for host-side recovery.
-    # Caddy reaches port 8080 over kelvara-backend; it is never public.
+    ports: !override []
+    # Caddy reaches port 8080 over kelvara-backend; no backend port is host-published.
     environment:
       ALLOWED_ORIGINS: https://${KELVARA_APP_DOMAIN:?set public application hostname}
   caddy:
