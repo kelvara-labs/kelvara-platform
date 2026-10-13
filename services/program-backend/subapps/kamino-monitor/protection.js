@@ -40,7 +40,17 @@ export async function runFeeLadder(record,{nonceCurrent,submit,status,wait=ms=>n
  const variants=[...record.variants].sort((a,b)=>a.priorityMicroLamports-b.priorityMicroLamports),failed=new Set();
  async function reconcile(){for(const variant of variants){const state=await status(variant.signature);if(state?.err){failed.add(variant.signature);continue}if(["confirmed","finalized"].includes(state?.confirmationStatus))return{signature:variant.signature,status:state}}return null}
  const existing=await reconcile();if(existing)return existing;
- for(const variant of variants){if(failed.has(variant.signature))continue;const landed=await reconcile();if(landed)return landed;if(!await nonceCurrent(variant)){failed.add(variant.signature);continue}await submit(variant);for(let i=0;i<2;i++){const result=await reconcile();if(result)return result;if(failed.has(variant.signature))break;await wait(attemptWaitMs)}}
+ for(const variant of variants){
+  if(failed.has(variant.signature))continue;
+  const landed=await reconcile();if(landed)return landed;
+  if(!await nonceCurrent(variant)){failed.add(variant.signature);continue}
+  try{await submit(variant)}catch{
+   const reconciled=await reconcile();if(reconciled)return reconciled;
+   return{signature:variant.signature,status:null,pending:true,nonceCurrent:await nonceCurrent(variant)};
+  }
+  for(let i=0;i<2;i++){const result=await reconcile();if(result)return result;if(failed.has(variant.signature))break;await wait(attemptWaitMs)}
+  return{signature:variant.signature,status:null,pending:true,nonceCurrent:await nonceCurrent(variant)};
+ }
  throw new Error("No armed transaction confirmed. Inspect every signature and nonce before retrying.")
 }
 

@@ -22,9 +22,9 @@ const headers = {'authorization': `Bearer ${token}`, 'content-type':'application
 test('healthz and api-config expose exact public fields', async t => {
   const {server, request} = await running(); t.after(()=>server.close());
   const health = await json(await request('/healthz'));
-  assert.deepEqual(health.body, {ok:true,service:'kamino-monitor',network:'mainnet',releaseSha:null,monitoring:false,controlMonitoring:true,mainnetProtection:{enabled:false,protectionMode:'demo',demoExecutionEnabled:true,productionExecutionAuthorized:false,scope,reason:null},lastError:null,controlLastError:null});
+  assert.deepEqual(health.body, {ok:true,service:'kamino-monitor',network:'mainnet',releaseSha:null,monitoring:false,controlMonitoring:true,mainnetProtection:{enabled:false,protectionMode:'demo',setupAuthorized:false,manualExecutionAuthorized:false,automaticExecutionAuthorized:false,demoExecutionEnabled:true,productionExecutionAuthorized:false,scope,reason:null},lastError:null,controlLastError:null});
   const config = await json(await request('/api/config'));
-  assert.deepEqual(config.body, {network:'mainnet',vault:'BoZDRc1RDY9FzUZZ19WT4GbtTnnbXQ8AGSU5ByEw3ut5',name:'Steakhouse USDG High Yield',program:'KvauGMspG5k6rtzrqqn7WNn3oZdyKqLKwK2XWQ8FLjd',walletSigning:'client-only',evacuation:false,mainnetProtection:{enabled:false,protectionMode:'demo',demoExecutionEnabled:true,productionExecutionAuthorized:false,scope,reason:null}});
+  assert.deepEqual(config.body, {network:'mainnet',vault:'BoZDRc1RDY9FzUZZ19WT4GbtTnnbXQ8AGSU5ByEw3ut5',name:'Steakhouse USDG High Yield',program:'KvauGMspG5k6rtzrqqn7WNn3oZdyKqLKwK2XWQ8FLjd',walletSigning:'client-only',evacuation:false,mainnetProtection:{enabled:false,protectionMode:'demo',setupAuthorized:false,manualExecutionAuthorized:false,automaticExecutionAuthorized:false,demoExecutionEnabled:true,productionExecutionAuthorized:false,scope,reason:null}});
 });
 
 test('demo config unavailable outside demo and scoped wallet is exact', async t => {
