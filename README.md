@@ -8,10 +8,6 @@ Kelvara maps the control assumptions behind a supported onchain position, preser
 
 [Live app](https://app.kelvara.xyz/) · [Architecture](docs/architecture/dependency-map.svg)
 
-<p align="center">
-  <img src="docs/architecture/dependency-map.svg" alt="Kelvara service dependency map" width="100%">
-</p>
-
 ### Architecture in one sentence
 
 Solami gRPC and RPC sources feed protocol-specific adapters; adapters produce canonical evidence; Observation Hub and Control Center preserve evidence and identity; Safeguards, Governance, and Protection consume it.
