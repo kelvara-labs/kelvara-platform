@@ -1,20 +1,26 @@
 # Kelvara
 
-**Evidence-driven protection for onchain yield positions.**
+**Self-custodial protection infrastructure for Solana DeFi positions.**
 
-Kelvara discovers supported positions held by a Solana wallet, monitors the control assumptions behind them, explains material changes as safeguards, and prepares a constrained exit for explicit wallet approval.
+Kelvara maps the control assumptions behind a supported onchain position, preserves canonical evidence about those assumptions, and lets the owner prepare a narrowly constrained exit before an incident.
 
-Kelvara is non-custodial. It does not hold user assets or browser wallet keys. Observation is read-only. Authentication uses a wallet-signed message. Any transaction remains a separate, explicit wallet action.
+> Protocol-specific state in. Provider-neutral evidence out.
+
+[Live app](https://app.kelvara.xyz/) · [Architecture](docs/architecture/dependency-map.svg)
 
 <p align="center">
   <img src="docs/architecture/dependency-map.svg" alt="Kelvara service dependency map" width="100%">
 </p>
 
-## The problem
+### Architecture in one sentence
 
-A yield position can look healthy while its control plane changes underneath it. Upgrade authorities, multisig membership, thresholds, privileged proposals, and execution rights may change before a holder notices. Raw explorers expose fragments of this evidence, but they do not connect those changes to a holder's position or next decision.
+Solami gRPC and RPC sources feed protocol-specific adapters; adapters produce canonical evidence; Observation Hub and Control Center preserve evidence and identity; Safeguards, Governance, and Protection consume it.
 
-Kelvara turns that fragmented evidence into a position-scoped answer:
+## Why Kelvara
+
+A yield position can look healthy while its control plane changes underneath it. Multisig membership, approval thresholds, upgrade authorities, privileged proposals, and execution rights may change before a holder notices. Raw explorers expose fragments of this evidence, but they do not connect those changes to a holder's position or next decision.
+
+Kelvara turns that fragmented evidence into position-scoped answers:
 
 1. **What do I hold?** Discover supported positions for the authenticated wallet.
 2. **Who can change it?** Resolve verified governance and authority mappings.
@@ -22,152 +28,222 @@ Kelvara turns that fragmented evidence into a position-scoped answer:
 4. **What does that mean?** Show pass, review, breach, or unknown without hiding stale or unavailable evidence.
 5. **What can I do?** Prepare and validate an exact exit path, then ask the wallet owner to approve it.
 
-## User story
+> **No false guarantees**
+>
+> A green screen is not a guarantee. Kelvara reports what was checked, evidence freshness, and unavailable coverage. The intended claim is **“No monitored condition is currently breached,”** never **“Everything is safe.”**
 
-> As a holder of an onchain yield position, I want to know when the authority or governance assumptions behind my position change, understand the evidence, and retain control over any protective exit.
+## Implemented today
 
-### Normal journey
+### Mainnet
 
-1. The visitor opens the public landing page and selects **Mainnet**, **Devnet**, or **Devnet Demo**.
-2. Kelvara shows only the supported catalog for that exact context. Catalog rows are not ownership claims.
-3. The visitor connects a Solana wallet and signs a one-time authentication message.
-4. Kelvara discovers eligible positions belonging to that wallet.
-5. Verified target mappings connect each eligible position to its governance/control subject.
-6. Indexers observe protocol state, Squads governance, and transaction velocity.
-7. Observation Hub stores canonical evidence with source, slot, timestamps, and freshness.
-8. The authenticated workspace shows portfolio, governance, safeguards, and protection readiness.
-9. A control change becomes a safeguard finding only through the normal evidence pipeline—not by directly changing UI state.
-10. If protection is available, Kelvara prepares and validates constrained transaction bytes. The wallet owner reviews, signs, and explicitly broadcasts.
+- Wallet-scoped discovery for supported Kamino positions.
+- Verified Kamino-to-Squads control mappings.
+- Squads V4 signer-set and approval-threshold monitoring.
+- Evidence provenance, finalized slot, observation time, and freshness.
+- Read-only Squads governance activity.
+- Durable-nonce protected exits for supported positions.
+- Explicit submission of a previously approved exit.
 
-### Quiet-state value
+### Supported safeguard checks
 
-A green screen is not a guarantee. Kelvara reports what was checked, evidence freshness, unavailable coverage, and the closest relevant history. The intended wording is “No monitored condition is currently breached,” not “Everything is safe.”
+| Check | Meaning |
+|---|---|
+| Signer set unchanged | Current Squads members match the approved baseline |
+| Approval threshold unchanged | Required approvals have not been reduced |
 
-## Potential client walkthrough
+### Implementation status
 
-### Public, no wallet
+| Capability | Mainnet | Devnet | Notes |
+|---|:---:|:---:|---|
+| Position discovery | Implemented | Partial | Supported targets only |
+| Kamino adapter | Implemented | Partial | Network-scoped sources |
+| Squads control mapping | Implemented | Partial | Verified mappings only |
+| Signer safeguard | Implemented | Partial | Approved signer baseline |
+| Threshold safeguard | Implemented | Partial | Approved threshold baseline |
+| Governance tracking | Implemented | Partial | Read-only |
+| Durable-nonce preparation | Implemented | — | Supported positions |
+| Protected withdrawal | Implemented | — | Explicit owner opt-in |
+| Demo incident lab | — | In development | Devnet only; no-value assets |
 
-Open:
+“Partial” means the bounded Devnet journey is not yet complete end to end.
 
-```text
-http://127.0.0.1:18437/index.html
-```
+## Architecture
 
-Verify:
+Kelvara separates chain transport, protocol decoding, canonical evidence, policy evaluation, presentation, and signing boundaries.
 
-- network selector offers Mainnet, Devnet, and Devnet Demo;
-- Mainnet displays supported Mainnet catalog entries;
-- Devnet never falls back to Mainnet data;
-- Devnet Demo is clearly labeled test data and makes no ownership claim;
-- wallet-specific portfolio, governance, safeguards, and protection remain unavailable before authentication.
+### Chain transport
 
-### Authenticated Mainnet
+Kelvara uses complementary Solana data paths:
 
-1. Select **Mainnet**.
-2. Connect the intended wallet.
-3. Review the wallet authentication challenge and sign the message.
-4. Enter the authenticated workspace.
-5. Open **Positions** to inspect eligible supported positions.
-6. Open **Governance** to inspect linked Squads/control evidence.
-7. Open **Safeguards** to inspect status, history, source, and freshness.
-8. Open **Protection** to inspect readiness and the explicit approval boundary.
+- **Solami gRPC** provides low-latency Mainnet account and transaction streams.
+- **Helius JSON-RPC** provides point queries, verification, enrichment, recovery, and historical backfill.
 
-Wallet authentication proves wallet control for the session. It does not authorize a transaction.
+Streaming provides immediacy. RPC remains the independent query and recovery path. Neither transport directly determines safeguard state. Protocol adapters normalize observations before they enter the evidence layer.
 
-### Devnet Demo
-
-The real Devnet wallet journey is being completed as a bounded demonstration environment. Its contract is:
-
-1. select Devnet Demo;
-2. authenticate with a personal wallet;
-3. receive the fixed, no-value `FUN USD` test asset;
-4. approve activation of a real Devnet position;
-5. observe that position through the normal Kelvara pipeline;
-6. trigger one predefined Devnet-only authority incident;
-7. wait for finalized chain state to flow through indexer, Observation Hub, evaluator, and UI;
-8. review, simulate, approve, and submit evacuation;
-9. verify the returned test balance and evacuated position state.
-
-`FUN USD` is always labeled **Devnet test asset · No real value**. Mainnet mutation is excluded from this demo flow. Devnet Demo is available only through the normal Kelvara UI at `/`.
-
-## How the system works
-
-Kelvara separates observation, policy, presentation, and signing boundaries.
-
-### 1. Public discovery and wallet session
-
-`program-backend` serves the UI and public catalog. `/index.html` is session-free. `/app.html` requires a valid network-scoped wallet session created from a one-time signed challenge. Network and genesis mismatches fail closed.
-
-### 2. Position and governance discovery
-
-The backend projects wallet positions from supported protocol data. Control Center owns canonical target mappings, baselines, enrollment state, and protection-readiness projection. Enrollment requires an authenticated wallet, a canonical eligible position, and a cryptographically verified governance target.
-
-### 3. Evidence ingestion
-
-Protocol-specific workers read external state:
+### Protocol adapters
 
 - **Kamino indexer** observes configured Kamino targets and Solana account state.
 - **Squads indexer** observes verified multisig assignments and finalized governance activity.
-- **Velocity indexer** derives wallet/subject transaction-activity evidence.
+- **Velocity indexer** derives wallet and subject transaction-activity evidence.
 
-Each producer has a dedicated scoped credential. Producer identity and source bindings are validated at ingestion.
+Each producer has a dedicated scoped credential. Observation Hub validates producer identity and source bindings at ingestion.
 
-### 4. Canonical observation
+### Evidence and control layers
 
-Observation Hub is the evidence authority. It stores normalized observations, governance detections, actions, evaluation receipts, and freshness. The browser does not manufacture incident state.
+**Observation Hub** is the canonical evidence authority. It stores normalized observations, governance detections, actions, evaluation receipts, provenance, and freshness. The browser cannot manufacture incident state.
 
-### 5. Safeguard evaluation
+**Control Center** owns verified target mappings, approved baselines, enrollment state, and protection-readiness projection. Enrollment requires an authenticated wallet, a canonical eligible position, and a verified governance target.
 
-The backend combines wallet scope, canonical mappings, baselines, and Observation Hub evidence. Outcomes preserve provenance and uncertainty. Missing, stale, disagreeing, or unauthorized evidence cannot silently become a pass.
+**Program Backend** serves the application edge, creates network-scoped wallet sessions, projects supported positions, and exposes Safeguards, Governance, and Protection APIs.
 
-### 6. Protection boundary
+### Trust boundaries
 
-Protection is explicit opt-in. Prepared transaction material is constrained to the expected network, position, destination, programs, accounts, instruction sequence, amount, signer set, and fee policy. Exact bytes are inspected and simulated before wallet approval. Kelvara never asks for a seed phrase or private key.
+```text
+Browser / wallet
+      |
+      | authenticated API; transaction consent remains separate
+      v
+Program Backend
+      |
+      +---- Control Center
+      |
+      +---- Observation Hub
+                  ^
+                  | scoped producer credentials
+          +-------+--------+
+          |       |        |
+       Kamino   Squads  Velocity
+          ^       ^        ^
+          +------- Solana -+
+             gRPC + RPC
+```
 
-## Service map
+## Safeguards
 
-| Component | Responsibility | Trust boundary |
-|---|---|---|
-| `ui/` | Public catalog and authenticated workspace | Browser; no server credentials |
-| `program-backend` | UI hosting, wallet sessions, portfolio projection, safeguards, protection APIs | Public application edge |
-| `control-center` | Verified mappings, baselines, enrollment, readiness, operator/auditor policy | Internal control plane |
-| `observation-hub` | Canonical evidence, governance actions, receipts, freshness | Internal evidence authority |
-| `indexer-kamino` | Kamino/Solana observations | Read-only producer |
-| `indexer-squads` | Squads assignments and finalized governance lifecycle | Read-only producer |
-| `indexer-velocity` | Transaction velocity/activity observations | Read-only producer |
-| `status-page` | Independent service-health history | Loopback operations surface |
-| Permit Vault | Signed permit/readiness authority | External least-privilege dependency |
-| Solana RPC / protocol APIs | Chain and protocol source data | External evidence sources |
+Safeguards answer:
 
-See the full [SVG dependency map](docs/architecture/dependency-map.svg).
+> Has a monitored assumption behind this position changed?
+
+They compare canonical current state with an approved baseline. Outcomes preserve provenance and uncertainty. Missing, stale, disagreeing, or unauthorized evidence cannot silently become a pass.
+
+### Example: Squads control evidence
+
+```text
+Supported Kamino position
+└─ verified Squads control subject
+   ├─ approved signer baseline
+   ├─ approved threshold baseline
+   ├─ current finalized slot
+   ├─ decoder provenance
+   └─ observation freshness
+
+                    ↓
+
+Safeguards
+├─ Signer set unchanged
+└─ Approval threshold unchanged
+```
+
+The evaluator is position-neutral: it consumes verified identity, canonical observations, and an approved baseline rather than UI-specific state.
+
+## Governance
+
+Governance answers:
+
+> What is the controlling multisig proposing, approving, or executing now?
+
+Kelvara reconstructs read-only Squads proposal activity for verified control subjects. A pending proposal is not treated as effective control state. The monitored baseline changes only after relevant finalized execution evidence enters the normal observation and evaluation path.
+
+## Protected exits
+
+A normally signed Solana transaction depends on a recent blockhash and expires quickly. It is unsuitable as an exit authorized now but potentially needed later.
+
+Kelvara uses user-controlled durable nonce accounts to preserve exact transactions approved beforehand. For a supported protected position:
+
+1. Kelvara resolves the exact position and destination.
+2. The backend constructs and simulates constrained evacuation transactions.
+3. Three priority-fee variants are prepared against separate durable nonce accounts.
+4. The wallet signs those exact transactions client-side.
+5. Kelvara stores the signed variants and verified nonce state.
+6. When the owner chooses **Withdraw now**, Kelvara may submit an already approved variant.
+7. Kelvara cannot create a different withdrawal or obtain general wallet authority.
+
+The owner retains control and can revoke unused nonce authorizations. Prepared material is constrained to the expected network, position, destination, programs, accounts, instruction sequence, amount, signer set, and fee policy. Exact bytes are inspected and simulated before approval.
+
+### Permit Vault
+
+Permit Vault is the least-privilege readiness authority for signed protection material. It does not hold browser-wallet private keys and does not grant arbitrary transaction authority. Protection readiness and evidence observation remain separate responsibilities.
+
+## User flow
+
+1. Connect and authenticate a Solana wallet.
+2. Kelvara discovers supported positions and verified control mappings.
+3. Indexers continuously normalize protocol and governance evidence.
+4. Safeguards and Governance explain current control state and activity.
+5. For supported positions, the owner can pre-authorize and later submit a constrained protected exit.
+
+Wallet authentication proves wallet control for the session. It does not authorize a transaction.
 
 ## Security invariants
 
+### Wallet safety
+
 - **Non-custodial:** wallet secrets remain in the wallet.
 - **Authentication is not transaction consent:** `signMessage` cannot authorize activation or evacuation.
-- **Exact network scope:** wallet sessions, evidence, mappings, and actions are network-bound.
+- **Explicit protection opt-in:** monitoring enrollment does not silently enable pre-signing.
+
+### Evidence integrity
+
 - **Fail closed:** unknown, stale, mismatched, or unavailable evidence is not presented as safe.
 - **Canonical evidence:** Observation Hub is authoritative; UI state cannot bypass ingestion and evaluation.
 - **Verified governance targets:** no wildcard or inferred multisig mappings.
 - **Least privilege:** dedicated credentials per producer and read scope.
-- **Explicit protection opt-in:** monitoring enrollment does not silently enable pre-signing.
+
+### Network and execution safety
+
+- **Exact network scope:** wallet sessions, evidence, mappings, and actions are network-bound.
 - **Exact-byte validation:** prepared and signed transactions are checked before submission.
 - **No automatic retry of uncertain financial actions:** ambiguous submission state requires review.
 - **Mainnet isolation:** Devnet demo authorities and test assets cannot authorize Mainnet mutation.
+
+## Live review
+
+### Public app
+
+- Application: [https://app.kelvara.xyz/](https://app.kelvara.xyz/)
+
+Without a wallet, verify that network catalogs are explicitly scoped and wallet-specific Portfolio, Governance, Safeguards, and Protection data remains unavailable.
+
+### Authenticated Mainnet walkthrough
+
+1. Select **Mainnet** and connect the intended wallet.
+2. Review and sign the one-time authentication message.
+3. Open **Positions** to inspect eligible supported positions.
+4. Open **Governance** to inspect linked Squads activity.
+5. Open **Safeguards** to inspect status, source evidence, history, and freshness.
+6. Open **Protection** to inspect readiness and the separate transaction-approval boundary.
+
+### Devnet Demo
+
+A bounded Devnet environment is under development for reproducible incident scenarios using no-value test assets. It is isolated from Mainnet and cannot authorize Mainnet mutation. Incomplete activation, incident, or evacuation steps are not represented as complete.
 
 ## Local deployment
 
 ### Requirements
 
 - Docker Engine with Docker Compose
-- A populated `.env` containing the required scoped service credentials and RPC configuration
+- Required scoped service credentials and RPC configuration
 - Access to the configured Permit Vault dependency
 
-`.env.example` documents configuration shape only. Its placeholder credentials are not production credentials. Never commit `.env`, keypairs, private keys, permit bundles, runtime databases, or logs.
+Secrets, keypairs, permit bundles, runtime databases, and logs must remain outside Git.
 
-### Start the potential client stack
+### Start
 
 ```bash
+git clone https://github.com/kelvara-labs/kelvara-platform.git
+cd kelvara-platform
+
+# Configure required endpoints and scoped credentials outside Git.
 docker compose \
   --profile kamino \
   --profile squads \
@@ -193,9 +269,7 @@ curl --fail 'http://127.0.0.1:18437/api/catalog?network=mainnet-beta'
 curl --fail http://127.0.0.1:18090/healthz
 ```
 
-Local surfaces:
-
-| Surface | URL |
+| Local surface | URL |
 |---|---|
 | Application | `http://127.0.0.1:18437/index.html` |
 | Status page | `http://127.0.0.1:18090/` |
@@ -209,24 +283,37 @@ Admin and diagnostics ports bind to loopback by default. The internal backend ne
 
 ## Testing
 
-Core backend tests and syntax checks:
-
 ```bash
 cd services/program-backend
 npm test
 npm run check
 ```
 
-Service tests are colocated with each service. High-risk behavior has focused coverage for wallet/network session isolation, public catalogs, governance mappings, safeguard evaluation, Permit Vault projection, protection lifecycle, exact transaction constraints, and indexer ingestion.
+Service tests are colocated with each service. High-risk behavior has focused coverage for wallet and network session isolation, public catalogs, governance mappings, safeguard evaluation, Permit Vault projection, protection lifecycle, transaction constraints, and indexer ingestion.
 
-Docker health proves service availability—not the complete wallet or signing journey. Final demo evidence should record both container health and the exact browser/wallet boundaries exercised.
+Docker health proves service availability, not the complete wallet or signing journey. Review evidence should record both container health and the exact browser and wallet boundaries exercised.
+
+## Service map
+
+| Component | Responsibility | Trust boundary |
+|---|---|---|
+| `ui/` | Public catalog and authenticated workspace | Browser; no server credentials |
+| `program-backend` | UI hosting, wallet sessions, portfolio projection, safeguards, protection APIs | Public application edge |
+| `control-center` | Verified mappings, baselines, enrollment, readiness, operator and auditor policy | Internal control plane |
+| `observation-hub` | Canonical evidence, governance actions, receipts, freshness | Internal evidence authority |
+| `indexer-kamino` | Kamino and Solana observations | Read-only producer |
+| `indexer-squads` | Squads assignments and finalized governance lifecycle | Read-only producer |
+| `indexer-velocity` | Transaction velocity and activity observations | Read-only producer |
+| `solana-transport` | Solami gRPC live streams and Helius RPC query/recovery path | External chain transport |
+| `status-page` | Independent service-health history | Loopback operations surface |
+| Permit Vault | Signed permit and readiness authority | External least-privilege dependency |
 
 ## Repository map
 
 ```text
 .
-├── compose.yaml                  # local service topology
-├── ui/                           # synchronized application UI snapshot
+├── compose.yaml
+├── ui/                           # application UI snapshot
 ├── services/
 │   ├── program-backend/          # app edge, portfolio, safeguards, protection
 │   ├── control-center/           # mappings, enrollment, baselines, readiness
@@ -234,32 +321,36 @@ Docker health proves service availability—not the complete wallet or signing j
 │   ├── indexer-kamino/           # Kamino observations
 │   ├── indexer-squads/           # Squads governance observations
 │   ├── indexer-velocity/         # transaction activity observations
+│   ├── solana-transport/         # gRPC and RPC transport abstraction
 │   ├── status-page/              # operational health surface
-│   └── contracts/                # shared evidence contracts
+│   └── contracts/                # shared provider-neutral contracts
 ├── governance-attack-lab/        # bounded governance scenario tooling
-└── docs/                         # architecture and implementation contracts
+└── docs/architecture/            # public architecture visual
 ```
 
-## Repository and deployment ownership
+## Core contracts
 
-- Platform monorepo: `kelvara-labs/kelvara-platform`
-- UI upstream and deployment source: [`andrzejsantocki/kelvara-ui`](https://github.com/andrzejsantocki/kelvara-ui)
-- The local `ui/` directory is a synchronized snapshot. Its exact upstream branch and commit are recorded in [`UI_UPSTREAM.md`](UI_UPSTREAM.md).
+Kelvara services communicate through versioned, provider-neutral contracts rather than UI-shaped JSON. Important definitions include:
 
-This split keeps backend/evidence infrastructure reviewable without obscuring the UI deployment owner.
+- [`target-contract-v2.js`](services/contracts/src/target-contract-v2.js) — canonical monitored-target identity.
+- [`control-map-v1.js`](services/contracts/src/control-map-v1.js) — verified position-to-control mapping.
+- [`governance-control-v1.js`](services/contracts/src/governance-control-v1.js) — current effective governance control.
+- [`governance-action-v1.js`](services/contracts/src/governance-action-v1.js) — governance proposal and execution evidence.
+- [`wallet-safeguard-policy.js`](services/contracts/src/wallet-safeguard-policy.js) — wallet-scoped safeguard policy.
+- [`wallet-safeguard-receipt.js`](services/contracts/src/wallet-safeguard-receipt.js) — evaluated safeguard result and provenance.
+- [`ingestion-contract.js`](services/contracts/src/ingestion-contract.js) — producer ingestion boundary.
 
-## Current limitations
+## Current scope and limitations
 
 - Supported protocols and positions are allowlisted, not universal.
 - Mainnet portfolio and safeguards require an authenticated wallet session.
-- Provider freshness and availability can degrade; the UI must preserve `unknown`/`unavailable` states.
+- Current live safeguard coverage is the approved Squads signer set and approval threshold for verified supported mappings.
+- Provider freshness and availability can degrade; the UI preserves `unknown` and `unavailable` states.
 - Public Solana RPC endpoints are unsuitable for sustained production polling.
-- The real Devnet Demo wallet lifecycle is under active implementation; unexercised activation, incident, or evacuation steps must not be reported as complete.
+- The bounded Devnet Demo wallet lifecycle remains under active implementation.
 - This code and its tests are not a security audit.
 
 ## Evidence vocabulary
-
-Kelvara keeps these states distinct:
 
 - **Live:** observed from the configured current source within its freshness policy.
 - **Cached/stale:** previously observed, outside freshness policy.
